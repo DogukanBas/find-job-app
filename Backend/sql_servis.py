@@ -1,6 +1,6 @@
-import Helper
 import psycopg2
-from Entities import Employer,Account
+import Helper as Helper
+
 
 def registerEmployer(employer,account):
     conn2 = Helper.DataBaseConnector.singleton.connection
@@ -30,7 +30,6 @@ def registerEmployee(employee,account):
         accountID= cur.fetchone()[0]
         values=(accountID,account.userName,account.password,account.userType)
         cur.execute(insertQuery,values)
-
         insertQuery = "UPDATE employee SET employeeName = %s, employeeSurname = %s, employeePhone = %s, employeeAddress = %s where employeeId = %s"
         values = (employee.employeeName, employee.employeeSurname,employee.employeePhone,employee.employeeAddress, accountID)
         cur.execute(insertQuery,values)

@@ -1,5 +1,5 @@
-
 import psycopg2
+
 class Account:
     def __init__(self,accountId,username,password,userType):
         self.accountId = accountId
