@@ -1,8 +1,5 @@
 import psycopg2
-from sql_servis import *
-import Helper
-from Entities import *
-
+import Backend
 # pulled from backend
 
 # #connect to the database
