@@ -1,6 +1,9 @@
 import psycopg2
-import Helper as Helper
+import Backend.Helper as Helper
+from Backend.Entities import *
 
+Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
+conn2 = Helper.DataBaseConnector.singleton.connection
 
 def registerEmployer(employer,account):
     conn2 = Helper.DataBaseConnector.singleton.connection
@@ -68,3 +71,6 @@ def login(account):
         print("za")
         print(error)
         print("xd")
+
+# login(Account(0,"usernaeme","1234","false"))
+# registerEmployer(Employer(0,"aktif","1234","bakirkoy"),Account(0,"usernaeme","1234","False"))
