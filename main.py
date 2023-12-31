@@ -3,8 +3,7 @@ from sql_servis import *
 import Helper
 from Entities import *
 
-# back-end branch
-
+# pulled from backend
 
 # #connect to the database
 Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
