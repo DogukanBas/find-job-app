@@ -1,7 +1,13 @@
 import tkinter as tk
-import employeeSignup
-import employerSignup
-import employeeMainPage
+import os.path
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+print(sys.path)
+from GUI import employeeMainPage
+from GUI import employerSignup
+from GUI import employeeSignup
+
+
 
 loginForm = tk.Tk()
 loginForm.title('Login Page')
@@ -27,6 +33,12 @@ def login():
     loginForm.destroy()
     employeeMainPage.showPage()
 
+
+def showPage():
+    loginForm.mainloop()
+
+
+
 loginButton = tk.Button(loginForm,text='Login',command=login)
 loginButton.grid(column=1,row=2)
 
@@ -44,4 +56,4 @@ employerSignUpLabel.bind("<Button-1>", lambda e: employerSignup.showPage())
 employerSignUpLabel.bind("<Enter>", lambda e: e.widget.configure(fg='blue'))
 employerSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='white'))
 
-loginForm.mainloop()
+showPage()

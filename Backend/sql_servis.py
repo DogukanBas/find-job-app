@@ -1,6 +1,9 @@
-import Helper
 import psycopg2
-from Entities import Employer,Account
+import Backend.Helper as Helper
+from Backend.Entities import *
+
+Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
+conn2 = Helper.DataBaseConnector.singleton.connection
 
 def registerEmployer(employer,account):
     conn2 = Helper.DataBaseConnector.singleton.connection
@@ -30,7 +33,6 @@ def registerEmployee(employee,account):
         accountID= cur.fetchone()[0]
         values=(accountID,account.userName,account.password,account.userType)
         cur.execute(insertQuery,values)
-
         insertQuery = "UPDATE employee SET employeeName = %s, employeeSurname = %s, employeePhone = %s, employeeAddress = %s where employeeId = %s"
         values = (employee.employeeName, employee.employeeSurname,employee.employeePhone,employee.employeeAddress, accountID)
         cur.execute(insertQuery,values)
@@ -69,3 +71,6 @@ def login(account):
         print("za")
         print(error)
         print("xd")
+
+# login(Account(0,"usernaeme","1234","false"))
+# registerEmployer(Employer(0,"aktif","1234","bakirkoy"),Account(0,"usernaeme","1234","False"))

@@ -1,4 +1,5 @@
 import tkinter as tk
+import Backend.Entities as Entities
 
 def showPage() :
     employeeSignupForm = tk.Tk()
