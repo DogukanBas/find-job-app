@@ -1,12 +1,13 @@
 import psycopg2
 import Backend.Helper as Helper
 from Backend.Entities import *
+from psycopg2.errors import *
 
-Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
-conn2 = Helper.DataBaseConnector.singleton.connection
 
 def registerEmployer(employer,account):
-    conn2 = Helper.DataBaseConnector.singleton.connection
+    if(employer.employerName == None or employer.employerSurname) :
+        return "Name and Surname cannot be empty."
+    conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
         insertQuery="INSERT INTO account(accountId,username,pass,userType) VALUES(%s,%s,%s,%s)"
@@ -19,14 +20,28 @@ def registerEmployer(employer,account):
         cur.execute(insertQuery,values)
         conn2.commit()
 
+    except(Exception, psycopg2.errors.UniqueViolation) as error:
+        print("UniqueViolation")
+        return "The username already taken. Please try another one."
+    
+    except(Exception, psycopg2.errors.NotNullViolation) as error2:
+        print("NotNullViolation")
+        return "Username and password cannot be empty."    
+    
     except(Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        return error
+        print("Transaction")
+        return ("Unvalid Phone Number. Please try again.")
+    
     return True
 
 
 def registerEmployee(employee,account):
-    conn2 = Helper.DataBaseConnector.singleton.connection
+    if(employee.employeeName==None or employee.employeeSurname==None):
+        return "Name and Surname cannot be empty."
+    ##check password in sql
+
+        
+    conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
         insertQuery="INSERT INTO account(accountId,username,pass,userType) VALUES(%s,%s,%s,%s)"
@@ -38,16 +53,24 @@ def registerEmployee(employee,account):
         values = (employee.employeeName, employee.employeeSurname,employee.employeePhone,employee.employeeAddress, accountID)
         cur.execute(insertQuery,values)
         conn2.commit()
+    except(Exception, psycopg2.errors.UniqueViolation) as error:
+        print("UniqueViolation")
+        return "The username already taken. Please try another one."
+    
+    except(Exception, psycopg2.errors.NotNullViolation) as error2:
+        print("NotNullViolation")
+        return "Username and password cannot be empty."   
+    
     except(Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        return error
-    return True
-        return error
+        print("Transaction")
+        return ("Unvalid Phone Number. Please try again.")
+    
     return True
 
 
-def login(account):
-    conn2 = Helper.DataBaseConnector.singleton.connection
+def loginCheck(account):
+    
+    conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
         print(account.userName) 
@@ -55,27 +78,22 @@ def login(account):
         query = "SELECT * FROM account"
         values = (account.userName, account.password)
         cur.execute(query,values) 
-        print("assa")
         userType = cur.fetchone()
         print(userType)
         
-        
-
-        # print("all")
-        # if(len(userType) == 0):
-        #     print("Kullanici adi veya şifre yanlis")
-        #     return False
-        # else:
-        #     if(userType[0][0] == "True"):
-        #         print("Employee")
-        #     else:
-        #         print("Employer")
+        if(len(userType) == 0):
+            print("No such user")
+            return "No such user"
+        else:
+            if(userType[0][0] == "True"):
+                return "Employee"
+            else:
+                return "Employer"
                 
-
     except(Exception, psycopg2.DatabaseError) as error:
-        print("za")
         print(error)
-        print("xd")
+        return error
+        
 
 # login(Account(0,"usernaeme","1234","false"))
 # registerEmployer(Employer(0,"aktif","1234","bakirkoy"),Account(0,"usernaeme","1234","False"))

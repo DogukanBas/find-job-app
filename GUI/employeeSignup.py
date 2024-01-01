@@ -52,7 +52,7 @@ def showPage() :
             messagebox.showinfo("Employee Signup", "Employee registered")
         else:
             print("Employee registration failed")
-            messagebox.showerror("Employee Signup", "Employee registration failed")
+            messagebox.showerror("Employee Signup", "Employee registration failed : " + status)
         employeeSignupForm.destroy()
     
     submitButton = tk.Button(employeeSignupForm, text="Submit", command=submit)
