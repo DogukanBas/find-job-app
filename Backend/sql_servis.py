@@ -3,7 +3,6 @@ import Backend.Helper as Helper
 from Backend.Entities import *
 from psycopg2.errors import *
 
-Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
 
 def registerEmployer(employer,account):
     
@@ -45,7 +44,6 @@ def registerEmployee(employee,account):
         return "Name and Surname cannot be empty."
     ##check password in sql
 
-        
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
@@ -66,12 +64,9 @@ def registerEmployee(employee,account):
         print("NotNullViolation")
         return "Username and password cannot be empty."   
     
-    except(psycopg2.DatabaseError) as error:
+    except(Exception, psycopg2.DatabaseError) as error:
         print("Transaction")
         return ("Unvalid Phone Number. Please try again.")
-    except(Exception) as error:
-        print(error)
-        return "Unknown error"
     
     return True
 
