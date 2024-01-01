@@ -40,6 +40,7 @@ def showPage() :
     def submit():
         newAccount = Entities.Account(None,employeeUsernameEntry.get(),employeePasswordEntry.get(),True)
         newEmployee = Entities.Employee(None,employeeNameEntry.get(),employeeSurnameEntry.get(),employeePhoneEntry.get(),employeeAddressEntry.get())
+        print(f"-- {newEmployee.employeePhone}")
         status = Service.registerEmployee(newEmployee,newAccount)
         if(status == True):
             print("Employee registered")
@@ -47,7 +48,7 @@ def showPage() :
             employeeSignupForm.destroy()
         else:
             print("Employee registration failed")
-            employeeSignupForm.destroy()
+            #employeeSignupForm.destroy()
             #employeeUsernameEntry.configure(highlightbackground='red')
             messagebox.showerror("Employee Signup", f"Employee registration failed - {status}")
     
