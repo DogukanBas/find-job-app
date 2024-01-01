@@ -4,7 +4,8 @@ from Backend import sql_servis as Service
 from Backend import Entities
 from tkinter import messagebox
 from tkinter.ttk import Combobox
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import  DateEntry
+import ttkbootstrap as tb
 
 def showPage(tab2,employeeId):
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
@@ -74,19 +75,19 @@ def showPage(tab2,employeeId):
         comboText.set("bachelors")
         schoolTypeComboBox = Combobox(addSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
         schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
-        startDateCalendar = DateEntry(addSchoolTop, width= 16, background= "magenta3", foreground= "white",bd=2)
+        startDateCalendar = tb.DateEntry(addSchoolTop)
         startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
-        endDateCalendar = DateEntry(addSchoolTop, width= 16, background= "magenta3", foreground= "white",bd=2)
+        endDateCalendar = tb.DateEntry(addSchoolTop)
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitSchool():
             print(startDateCalendar.get_date())
-            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.get_date(),endDateCalendar.get_date(),comboText.get())
+            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.entry.get(),endDateCalendar.entry.get(),comboText.get())
             status = Service.addEducation(newEducation)
             if(status == True):
                 print("School added")
                 messagebox.showinfo("School Add", "School added")
-                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.get_date(),endDateCalendar.get_date()))
+                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.entry.get(),endDateCalendar.entry.get()))
                 addSchoolTop.destroy()
             else: 
                 print(status)
