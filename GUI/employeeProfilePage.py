@@ -4,7 +4,6 @@ from Backend import sql_servis as Service
 from Backend import Entities
 from tkinter import messagebox
 from tkinter.ttk import Combobox
-from tkcalendar import  DateEntry
 import ttkbootstrap as tb
 
 def showPage(tab2,employeeId):
@@ -81,14 +80,14 @@ def showPage(tab2,employeeId):
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitSchool():
-            print(startDateCalendar.get_date())
-            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.entry.get(),endDateCalendar.entry.get(),comboText.get())
+            print(startDateCalendar.entry.get())
+            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),"2020-10-10","2023-10-10",comboText.get())
             status = Service.addEducation(newEducation)
             if(status == True):
                 print("School added")
                 messagebox.showinfo("School Add", "School added")
-                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.entry.get(),endDateCalendar.entry.get()))
-                addSchoolTop.destroy()
+                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),"2020-10-10","2023-10-10"))
+                #addSchoolTop.destroy()
             else: 
                 print(status)
                 messagebox.showerror(title="School Add", message=status)
@@ -288,3 +287,4 @@ def showPage(tab2,employeeId):
     # scrollbarAdvertisement = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=advertisementList.yview)
     # advertisementList.configure(yscrollcommand=scrollbarAdvertisement.set)
     # scrollbarAdvertisement.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
+    
