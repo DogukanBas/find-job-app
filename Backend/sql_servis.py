@@ -3,7 +3,11 @@ import Backend.Helper as Helper
 from Backend.Entities import *
 from psycopg2.errors import *
 
+<<<<<<<<< Temporary merge branch 1
 Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
+=========
+Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
+>>>>>>>>> Temporary merge branch 2
 
 def registerEmployer(employer,account):
     
