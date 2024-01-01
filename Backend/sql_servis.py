@@ -21,6 +21,8 @@ def registerEmployer(employer,account):
 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
+        return error
+    return True
 
 
 
@@ -39,6 +41,8 @@ def registerEmployee(employee,account):
         conn2.commit()
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
+        return error
+    return True
 
 
 def login(account):
