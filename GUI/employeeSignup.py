@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import messagebox
 import Backend.Entities as Entities
+import Backend.sql_servis as Service
 
 def showPage() :
     employeeSignupForm = tk.Tk()
@@ -42,6 +44,15 @@ def showPage() :
         print(employeeAddressEntry.get())
         print(employeeUsernameEntry.get())
         print(employeePasswordEntry.get())
+        newAccount = Entities.Account(None,employeeUsernameEntry.get(),employeePasswordEntry.get(),True)
+        newEmployee = Entities.Employee(None,employeeNameEntry.get(),employeeSurnameEntry.get(),employeePhoneEntry.get(),employeeAddressEntry.get())
+        status = Service.registerEmployee(newEmployee,newAccount)
+        if(status == True):
+            print("Employee registered")
+            messagebox.showinfo("Employee Signup", "Employee registered")
+        else:
+            print("Employee registration failed")
+            messagebox.showerror("Employee Signup", "Employee registration failed")
         employeeSignupForm.destroy()
     
     submitButton = tk.Button(employeeSignupForm, text="Submit", command=submit)

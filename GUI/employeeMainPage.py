@@ -56,7 +56,7 @@ def showPage():
     scrollbarSchool.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
     
     #add, update, delete buttons for school list
-    def addSchoolTopLevel(a):
+    def addSchoolTopLevel():
         addSchoolTop = tk.Toplevel()
         addSchoolTop.title('Add School')
         addSchoolTop.resizable(False,False)
