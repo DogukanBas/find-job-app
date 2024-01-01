@@ -25,7 +25,6 @@ def registerEmployer(employer,account):
     return True
 
 
-
 def registerEmployee(employee,account):
     conn2 = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
@@ -41,6 +40,8 @@ def registerEmployee(employee,account):
         conn2.commit()
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
+        return error
+    return True
         return error
     return True
 

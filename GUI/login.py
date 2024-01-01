@@ -33,11 +33,8 @@ def login():
     loginForm.destroy()
     employeeMainPage.showPage()
 
-
 def showPage():
     loginForm.mainloop()
-
-
 
 loginButton = tk.Button(loginForm,text='Login',command=login)
 loginButton.grid(column=1,row=2)
