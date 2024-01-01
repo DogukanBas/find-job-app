@@ -42,8 +42,6 @@ def registerEmployee(employee,account):
         print(error)
         return error
     return True
-        return error
-    return True
 
 
 def login(account):
