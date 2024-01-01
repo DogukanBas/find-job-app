@@ -203,6 +203,22 @@ def deleteEducation(education):
         conn.rollback()
         return error
 
+def getEducation(employeeId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        query = "SELECT * FROM employee_education where employeeid = %s"
+        values = (employeeId,)
+        cur.execute(query,values) 
+        education = cur.fetchall()
+        return education
+                
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
 def checkExistanceExperience(experience): 
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
@@ -285,6 +301,22 @@ def deleteExperience(experience):
         cur.execute(insertQuery,values)
         conn.commit()
         return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+def getExperience(employeeId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        query = "SELECT * FROM employee_experience where employeeId = %s"
+        values = (employeeId,)
+        cur.execute(query,values) 
+        experience = cur.fetchall()
+        return experience
+                
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
