@@ -86,7 +86,7 @@ def registerEmployee(employee,account):
 
 def loginCheck(account):
     if(account.userName is None or account.password is None):
-        return "Username and password cannot be empty."
+        return "Username and password cannot be empty.",None
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     

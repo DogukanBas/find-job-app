@@ -62,8 +62,6 @@ class Education:
             self.startDate = None
         if(self.endDate == ""):
             self.endDate = None
-        if(self.department == ""):
-            self.department = None
         if(self.schoolName == ""):
             self.schoolName = None
         if(self.schoolType == ""):
