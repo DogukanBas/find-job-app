@@ -4,7 +4,6 @@ from Backend.Entities import *
 from psycopg2.errors import *
 
 
-
 Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
 def registerEmployer(employer,account):
     if(employer.employerName == None) :
@@ -86,7 +85,6 @@ def registerEmployee(employee,account):
 
 def loginCheck(account):
     if(account.userName is None or account.password is None):
-        print("returned")
         return "Username and password cannot be empty."
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
@@ -104,7 +102,7 @@ def loginCheck(account):
             return "No such user"
         
         else:
-            if(userType[0] == "True"):
+            if(userType[0] == True):
                 return "Employee"
             else:
                 return "Employer"
@@ -112,7 +110,6 @@ def loginCheck(account):
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
-
 
         
 
