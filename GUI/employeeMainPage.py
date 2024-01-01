@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 def showPage():
     root = tk.Tk() 
     root.title("Main Page") 
@@ -14,7 +15,6 @@ def showPage():
     tabControl.pack(expand = 1, fill ="both") 
     
     ttk.Label(tab1, text ="Welcome to \ GeeksForGeeks").grid(column = 0,  row = 0, padx = 30, pady = 30)   
-    
     
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Surname:").grid(column = 0,  row = 1, padx = 5, pady = 5) 
@@ -48,6 +48,8 @@ def showPage():
     for col in schoolColumns:
         schoolList.heading(col, text=col)
 
+    schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
+    schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     # Insert the data in Treeview widget
     schoolList.grid(row=5,padx=5,pady=5,columnspan=3)
     
@@ -96,10 +98,16 @@ def showPage():
     def deleteSchool():
         selectedSchool = schoolList.selection()[0]
         schoolList.delete(selectedSchool)
+    
+    def updateSchoolTopLevel():
+        #get selected items values
+        selectedSchool = schoolList.selection()[0]
+        schoolValues = schoolList.item(selectedSchool)['values']
+        print(schoolValues)      
 
     addSchoolButton = ttk.Button(tab2,text='Add',command=addSchoolTopLevel)
     addSchoolButton.grid(row=6,column=0,padx=5,pady=5)
-    updateSchoolButton = ttk.Button(tab2,text='Update')
+    updateSchoolButton = ttk.Button(tab2,text='Update',command=updateSchoolTopLevel)
     updateSchoolButton.grid(row=6,column=1,padx=5,pady=5)
     deleteSchoolButton = ttk.Button(tab2,text='Delete',command=deleteSchool)
     deleteSchoolButton.grid(row=6,column=2,padx=5,pady=5)
