@@ -47,6 +47,8 @@ def showPage() :
             employeeSignupForm.destroy()
         else:
             print("Employee registration failed")
+            messagebox.showerror("Employee Signup", "Employee registration failed : " + status)
+        employeeSignupForm.destroy()
             #employeeUsernameEntry.configure(highlightbackground='red')
             messagebox.showerror("Employee Signup", f"Employee registration failed - {status}")
     
