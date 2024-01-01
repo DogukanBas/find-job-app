@@ -38,26 +38,23 @@ def showPage() :
     employeePasswordEntry.grid(row=5,column=1,padx=5,pady=5)
     
     def submit():
-        print(employeeNameEntry.get())
-        print(employeeSurnameEntry.get())
-        print(employeePhoneEntry.get())
-        print(employeeAddressEntry.get())
-        print(employeeUsernameEntry.get())
-        print(employeePasswordEntry.get())
         newAccount = Entities.Account(None,employeeUsernameEntry.get(),employeePasswordEntry.get(),True)
         newEmployee = Entities.Employee(None,employeeNameEntry.get(),employeeSurnameEntry.get(),employeePhoneEntry.get(),employeeAddressEntry.get())
         status = Service.registerEmployee(newEmployee,newAccount)
         if(status == True):
             print("Employee registered")
             messagebox.showinfo("Employee Signup", "Employee registered")
+            employeeSignupForm.destroy()
         else:
             print("Employee registration failed")
             messagebox.showerror("Employee Signup", "Employee registration failed : " + status)
         employeeSignupForm.destroy()
+            #employeeUsernameEntry.configure(highlightbackground='red')
+            messagebox.showerror("Employee Signup", f"Employee registration failed - {status}")
     
     submitButton = tk.Button(employeeSignupForm, text="Submit", command=submit)
-    submitButton.grid(row=6,column=1,padx=5,pady=5)
-        
+    submitButton.grid(row=6,column=1,padx=5,pady=5)   
+    
 
     employeeSignupForm.mainloop()
         
