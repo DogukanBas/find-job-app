@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from GUI import employeeProfile 
-from GUI import employeeAdvertisements
+from GUI import employeeProfilePage 
+from GUI import employeeAdvertisementsPage
 
 
-def showPage():
+def showPage(employeeId):
     root = tk.Tk() 
     root.title("Main Page") 
     tabControl = ttk.Notebook(root) 
@@ -16,8 +16,8 @@ def showPage():
     tabControl.add(tab2, text ='Profile') 
     tabControl.pack(expand = 1, fill ="both") 
      
-    employeeAdvertisements.showPage(tab1)
-    employeeProfile.showPage(tab2)
+    employeeAdvertisementsPage.showPage(tab1)
+    employeeProfilePage.showPage(tab2,employeeId)
     
     
     

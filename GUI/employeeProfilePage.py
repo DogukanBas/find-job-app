@@ -1,7 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+from Backend import sql_servis as Service
+from Backend import Entities
+from tkinter import messagebox
+from tkinter.ttk import Combobox
+from tkcalendar import Calendar, DateEntry
 
-def showPage(tab2):
+def showPage(tab2,employeeId):
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Surname:").grid(column = 0,  row = 1, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Address:").grid(column = 0,  row = 2, padx = 5, pady = 5) 
@@ -27,6 +32,8 @@ def showPage(tab2):
     
     #list past experiences in multi column list
     
+    ttk.Label(tab2,text="School Past",font="Times 30").grid(row=5,column=1,padx=5,pady=5)
+    
     schoolColumns = ('School Name', 'School Type', 'Start Date','End Date')
     schoolList = ttk.Treeview(tab2, columns=schoolColumns, show='headings')
 
@@ -37,11 +44,11 @@ def showPage(tab2):
     schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     # Insert the data in Treeview widget
-    schoolList.grid(row=5,padx=5,pady=5,columnspan=3)
+    schoolList.grid(row=6,padx=5,pady=5,columnspan=3)
     
     scrollbarSchool = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=schoolList.yview)
     schoolList.configure(yscrollcommand=scrollbarSchool.set)
-    scrollbarSchool.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
+    scrollbarSchool.grid(row=6,column=3, sticky='ns',padx=5,pady=5)
     
     #add, update, delete buttons for school list
     def addSchoolTopLevel():
@@ -63,16 +70,27 @@ def showPage(tab2):
         
         schoolNameEntry = tk.Entry(addSchoolTop)
         schoolNameEntry.grid(row=0,column=1,padx=5,pady=5)
-        schoolTypeEntry = tk.Entry(addSchoolTop)
-        schoolTypeEntry.grid(row=1,column=1,padx=5,pady=5)
-        startDateEntry = tk.Entry(addSchoolTop)
-        startDateEntry.grid(row=2,column=1,padx=5,pady=5)
-        endDateEntry = tk.Entry(addSchoolTop)
-        endDateEntry.grid(row=3,column=1,padx=5,pady=5)
+        comboText = tk.StringVar()
+        comboText.set("bachelors")
+        schoolTypeComboBox = Combobox(addSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
+        schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
+        startDateCalendar = DateEntry(addSchoolTop, width= 16, background= "magenta3", foreground= "white",bd=2)
+        startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        endDateCalendar = DateEntry(addSchoolTop, width= 16, background= "magenta3", foreground= "white",bd=2)
+        endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitSchool():
-            schoolList.insert('','end',values=(schoolNameEntry.get(),schoolTypeEntry.get(),startDateEntry.get(),endDateEntry.get()))
-            addSchoolTop.destroy()
+            print(startDateCalendar.get_date())
+            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.get_date(),endDateCalendar.get_date(),comboText.get())
+            status = Service.addEducation(newEducation)
+            if(status == True):
+                print("School added")
+                messagebox.showinfo("School Add", "School added")
+                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.get_date(),endDateCalendar.get_date()))
+                addSchoolTop.destroy()
+            else: 
+                print(status)
+                messagebox.showerror(title="School Add", message=status)
             
         submitButton = tk.Button(addSchoolTop,text='Submit',command=submitSchool)
         submitButton.grid(row=4,column=1,padx=5,pady=5)
@@ -124,14 +142,15 @@ def showPage(tab2):
         
 
     addSchoolButton = ttk.Button(tab2,text='Add',command=addSchoolTopLevel)
-    addSchoolButton.grid(row=6,column=0,padx=5,pady=5)
+    addSchoolButton.grid(row=7,column=0,padx=5,pady=5)
     updateSchoolButton = ttk.Button(tab2,text='Update',command=updateSchoolTopLevel)
-    updateSchoolButton.grid(row=6,column=1,padx=5,pady=5)
+    updateSchoolButton.grid(row=7,column=1,padx=5,pady=5)
     deleteSchoolButton = ttk.Button(tab2,text='Delete',command=deleteSchool)
-    deleteSchoolButton.grid(row=6,column=2,padx=5,pady=5)
+    deleteSchoolButton.grid(row=7,column=2,padx=5,pady=5)
         
     
     #--------------------------------------------------
+    ttk.Label(tab2,text="Experience Past",font="Times 30").grid(row=8,column=1,padx=5,pady=5)
     
     experienceColumns = ('Company Name', 'Position', 'Start Date','End Date')
     experienceList = ttk.Treeview(tab2, columns=experienceColumns, show='headings')
@@ -157,11 +176,11 @@ def showPage(tab2):
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.grid(row=7,padx=5,pady=5,columnspan=3)
+    experienceList.grid(row=9,padx=5,pady=5,columnspan=3)
     
     scrollbarExperience = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=experienceList.yview)
     experienceList.configure(yscrollcommand=scrollbarExperience.set)
-    scrollbarExperience.grid(row=7,column=3, sticky='ns',padx=5,pady=5)
+    scrollbarExperience.grid(row=9,column=3, sticky='ns',padx=5,pady=5)
     
     def addExperienceTopLevel():
         addExperienceTop = tk.Toplevel()
@@ -246,8 +265,25 @@ def showPage(tab2):
         endDateEntry.grid(row=3,column=1,padx=5,pady=5)
     
     addExperienceButton = ttk.Button(tab2,text='Add',command=addExperienceTopLevel)
-    addExperienceButton.grid(row=8,column=0,padx=5,pady=5)
+    addExperienceButton.grid(row=10,column=0,padx=5,pady=5)
     updateExperienceButton = ttk.Button(tab2,text='Update',command=updateExperienceTopLevel)
-    updateExperienceButton.grid(row=8,column=1,padx=5,pady=5)
+    updateExperienceButton.grid(row=10,column=1,padx=5,pady=5)
     deleteExperienceButton = ttk.Button(tab2,text='Delete',command=deleteExperience)
-    deleteExperienceButton.grid(row=8,column=2,padx=5,pady=5)
+    deleteExperienceButton.grid(row=10,column=2,padx=5,pady=5)
+    
+    # advertisementColumns = ('Advertisement Name', 'Advertisement Date', 'Contract Type','Position Name','Description','Counter','Application Date','Status')
+    # advertisementList = ttk.Treeview(tab2, columns=advertisementColumns, show='headings')
+
+    # # set column headings
+    # for col in advertisementColumns:
+    #     schoolList.heading(col, text=col)
+
+    # #insert random values
+    # advertisementList.insert('', 'end', text="1", values=('Bosch', '2023', 'intern','software','işe alım', '10', '2023','waiting'))
+
+    # # Insert the data in Treeview widget
+    # schoolList.grid(row=11,padx=5,pady=5,columnspan=3)
+    
+    # scrollbarAdvertisement = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=advertisementList.yview)
+    # advertisementList.configure(yscrollcommand=scrollbarAdvertisement.set)
+    # scrollbarAdvertisement.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
