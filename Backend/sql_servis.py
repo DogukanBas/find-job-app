@@ -3,6 +3,7 @@ import Backend.Helper as Helper
 from Backend.Entities import *
 from psycopg2.errors import *
 
+Helper.DataBaseConnector.singleton=Helper.DataBaseConnector()
 
 def registerEmployer(employer,account):
     
