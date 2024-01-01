@@ -30,25 +30,28 @@ passwordEntry = tk.Entry(loginForm,show='*')
 passwordEntry.grid(column=1,row=1,padx=5,pady=5)
 
 def login():
-    # account = Entities.Account(None,usernameEntry.get(),passwordEntry.get(),None)
-    # status = Service.loginCheck(account)
-    # if(status == "No such user"):
-    #     print("No such user")
-    #     messagebox.showinfo(("Login Failed", status))
-    #     return
-    # elif(status == "Employee"):
-    #     print("Employee")
-    #     employeeMainPage.showPage()
-    # elif(status == "Employer"):
-    #     print("Employer")
-    #     #employerMainPage.showPage()
-    # else:
-    #     print("Error")
-    #     messagebox.showinfo(("Login Failed", status))
-    #     return
+    account = Entities.Account(None,usernameEntry.get(),passwordEntry.get(),None)
+    status = Service.loginCheck(account)
     
-    loginForm.destroy()
-    employeeMainPage.showPage()
+    if(status == "No such user"):
+        print("No such user")
+        messagebox.showinfo("Login Failed", status)
+        return
+    elif(status == "Employee"):
+        print("Employee")
+        employeeMainPage.showPage()
+        loginForm.destroy()
+    elif(status == "Employer"):
+        print("Employer")
+        #employerMainPage.showPage()
+        #loginForm.destroy()
+    elif(status == "Username and password cannot be empty."):
+        print("Error")
+        messagebox.showinfo(title="Login Failed", message = status)
+    else:
+        print("xd")
+        messagebox.showinfo("Login Failed", status)
+        return
 
 def showPage():
     loginForm.mainloop()
