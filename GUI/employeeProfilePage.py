@@ -4,7 +4,8 @@ from Backend import sql_servis as Service
 from Backend import Entities
 from tkinter import messagebox
 from tkinter.ttk import Combobox
-import ttkbootstrap as tb
+#import ttkbootstrap as tb
+from tkcalendar import Calendar
 
 def showPage(tab2,employeeId):
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
@@ -71,26 +72,31 @@ def showPage(tab2,employeeId):
         schoolNameEntry = tk.Entry(addSchoolTop)
         schoolNameEntry.grid(row=0,column=1,padx=5,pady=5)
         comboText = tk.StringVar()
-        comboText.set("bachelors")
+        comboText.set("Bachelors")
         schoolTypeComboBox = Combobox(addSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
         schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
-        startDateCalendar = tb.DateEntry(addSchoolTop)
+        startDateCalendar = Calendar(addSchoolTop)
         startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
-        endDateCalendar = tb.DateEntry(addSchoolTop)
+        endDateCalendar = Calendar(addSchoolTop)
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
+        # startDateCalendar = tb.DateEntry(addSchoolTop,bootstyle='danger')
+        # startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        # endDateCalendar = tb.DateEntry(addSchoolTop,bootstyle='danger')
+        # endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitSchool():
-            print(startDateCalendar.entry.get())
-            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),"2020-10-10","2023-10-10",comboText.get())
+            print(startDateCalendar.get_date())
+            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.get_date(),endDateCalendar.get_date(),comboText.get())
             status = Service.addEducation(newEducation)
             if(status == True):
                 print("School added")
                 messagebox.showinfo("School Add", "School added")
-                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),"2020-10-10","2023-10-10"))
-                #addSchoolTop.destroy()
+                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.get_date(),endDateCalendar.get_date()))
+                addSchoolTop.destroy()
             else: 
                 print(status)
-                messagebox.showerror(title="School Add", message=status)
+                messagebox.showinfo("School Add", status)
+                
             
         submitButton = tk.Button(addSchoolTop,text='Submit',command=submitSchool)
         submitButton.grid(row=4,column=1,padx=5,pady=5)
@@ -135,10 +141,10 @@ def showPage(tab2,employeeId):
         schoolNameEntry.grid(row=0,column=1,padx=5,pady=5)
         schoolTypeEntry = tk.Entry(updateSchoolTop,textvariable=updateField[1])
         schoolTypeEntry.grid(row=1,column=1,padx=5,pady=5)
-        startDateEntry = tk.Entry(updateSchoolTop,textvariable=updateField[2])
-        startDateEntry.grid(row=2,column=1,padx=5,pady=5)
-        endDateEntry = tk.Entry(updateSchoolTop,textvariable=updateField[3])
-        endDateEntry.grid(row=3,column=1,padx=5,pady=5)
+        startDateCalendar = Calendar(updateSchoolTop)
+        startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        endDateCalendar = Calendar(updateSchoolTop)
+        endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
 
     addSchoolButton = ttk.Button(tab2,text='Add',command=addSchoolTopLevel)
