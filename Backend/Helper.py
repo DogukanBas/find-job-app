@@ -5,7 +5,7 @@ class DataBaseConnector :
     def __init__(self) : 
         self.database = "IsBul"
         self.user = "postgres"
-        self.password = "608608"
+        self.password = "postgres"
         self.connect()
         self.cursor = self.connection.cursor()
 

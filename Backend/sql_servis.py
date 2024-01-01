@@ -2,7 +2,7 @@ import psycopg2
 import Backend.Helper as Helper
 from Backend.Entities import *
 from psycopg2.errors import *
-
+from datetime import datetime
 
 Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
 
@@ -139,7 +139,8 @@ def addEducation(education):
     if(education.schoolName == None or education.startDate == None or education.schoolType == None):
         return "School name, start date and school type cannot be empty."
     
-    if(education.endDate != None and education.endDate < education.startDate): 
+    if(education.endDate != None and stringToDate(education.endDate) < stringToDate(education.startDate)):
+        print(type(education.endDate))
         return "End date cannot be before start date."
     
     if(checkExistanceEducation(education)):
@@ -166,7 +167,7 @@ def updateEducation(oldEducation,newEducation):
     if(newEducation.schoolName == None or newEducation.startDate == None or newEducation.schoolType == None):
         return "School name, start date and school type cannot be empty."
     
-    if(newEducation.endDate != None and newEducation.endDate < newEducation.startDate):
+    if(newEducation.endDate != None and stringToDate(newEducation.endDate) < stringToDate(newEducation.startDate)):
         return "End date cannot be before start date."
     
     if(checkExistanceEducation(newEducation)):
@@ -243,7 +244,7 @@ def addExperience(experience):
     if(experience.companyName == None or experience.startDate == None or experience.position == None):
         return "Company name, start date and position cannot be empty."
     
-    if(experience.endDate != None and experience.endDate < experience.startDate):
+    if(experience.endDate != None and stringToDate(experience.endDate) < stringToDate(experience.startDate)):
         return "End date cannot be before start date."
     
     if(checkExistanceExperience(experience)):
@@ -268,7 +269,7 @@ def updateExperience(oldExperience,newExperience):
     if(newExperience.companyName == None or newExperience.startDate == None or newExperience.position == None):
         return "Company name, start date and position cannot be empty."
     
-    if(newExperience.endDate != None and newExperience.endDate < newExperience.startDate):
+    if(newExperience.endDate != None and stringToDate(newExperience.endDate) < stringToDate(newExperience.startDate)):
         return "End date cannot be before start date."
     
     if(checkExistanceExperience(newExperience)):
@@ -321,3 +322,7 @@ def getExperience(employeeId):
         print(error)
         conn.rollback()
         return error
+    
+def stringToDate(date):
+    datetime_object = datetime.strptime(date, '%m/%d/%y')
+    return datetime_object

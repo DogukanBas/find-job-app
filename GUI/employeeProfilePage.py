@@ -86,6 +86,8 @@ def showPage(tab2,employeeId):
         
         def submitSchool():
             print(startDateCalendar.get_date())
+            print(endDateCalendar.get_date())
+
             newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.get_date(),endDateCalendar.get_date(),comboText.get())
             status = Service.addEducation(newEducation)
             if(status == True):
