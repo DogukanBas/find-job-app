@@ -18,7 +18,7 @@ def registerEmployer(employer,account):
         insertQuery = "UPDATE employer SET employerName = %s, employerPhone = %s, employerAddress = %s WHERE employerId = %s"
         values = (employer.employerName, employer.employerPhone,employer.employerAdress, accountID)
         cur.execute(insertQuery,values)
-        conn2.commit()
+        conn.commit()
 
     except(Exception, psycopg2.errors.UniqueViolation) as error:
         print("UniqueViolation")
@@ -52,7 +52,7 @@ def registerEmployee(employee,account):
         insertQuery = "UPDATE employee SET employeeName = %s, employeeSurname = %s, employeePhone = %s, employeeAddress = %s where employeeId = %s"
         values = (employee.employeeName, employee.employeeSurname,employee.employeePhone,employee.employeeAddress, accountID)
         cur.execute(insertQuery,values)
-        conn2.commit()
+        conn.commit()
     except(Exception, psycopg2.errors.UniqueViolation) as error:
         print("UniqueViolation")
         return "The username already taken. Please try another one."
