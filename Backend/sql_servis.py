@@ -162,6 +162,7 @@ def addEducation(education):
     
 
 def updateEducation(oldEducation,newEducation):
+
     if(newEducation.schoolName == None or newEducation.startDate == None or newEducation.schoolType == None):
         return "School name, start date and school type cannot be empty."
     
@@ -194,6 +195,93 @@ def deleteEducation(education):
     try:
         insertQuery = "DELETE FROM employee_education WHERE employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+def checkExistanceExperience(experience): 
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        query = "SELECT * FROM employee_experience where employeeid = %s and companyname = %s and startdate = %s and enddate = %s and position = %s"
+        values = (experience.employeeId, experience.companyName, experience.startDate, experience.endDate, experience.position)
+        cur.execute(query,values) 
+        experience = cur.fetchone()
+        
+        if(experience == None):
+            return False
+        else:
+            return experience
+                
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+def addExperience(experience):
+    if(experience.companyName == None or experience.startDate == None or experience.position == None):
+        return "Company name, start date and position cannot be empty."
+    
+    if(experience.endDate != None and experience.endDate < experience.startDate):
+        return "End date cannot be before start date."
+    
+    if(checkExistanceExperience(experience)):
+        print("Experience already exists")
+        return "Experience already exists"
+    
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        insertQuery = "INSERT INTO employee_experience (employeeId, companyName, startDate, endDate, position) VALUES (%s, %s, %s, %s, %s)"
+        values = (experience.employeeId, experience.companyName, experience.startDate, experience.endDate, experience.position)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+    
+def updateExperience(oldExperience,newExperience):
+    if(newExperience.companyName == None or newExperience.startDate == None or newExperience.position == None):
+        return "Company name, start date and position cannot be empty."
+    
+    if(newExperience.endDate != None and newExperience.endDate < newExperience.startDate):
+        return "End date cannot be before start date."
+    
+    if(checkExistanceExperience(newExperience)):
+        print("Experience already exists")
+        return "Experience already exists"
+    
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+
+    try:
+        insertQuery = "UPDATE employee_experience SET companyName = %s, startDate = %s, endDate = %s, position = %s WHERE employeeId = %s and companyName = %s and startDate = %s and endDate = %s and position = %s"
+        values = (newExperience.companyName, newExperience.startDate, newExperience.endDate, newExperience.position,oldExperience.employeeId, oldExperience.companyName, oldExperience.startDate, oldExperience.endDate, oldExperience.position)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+    
+
+def deleteExperience(experience):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        insertQuery = "DELETE FROM employee_experience WHERE employeeId = %s and companyName = %s and startDate = %s and endDate = %s and position = %s"
+        values = (experience.employeeId, experience.companyName, experience.startDate, experience.endDate, experience.position)
         cur.execute(insertQuery,values)
         conn.commit()
         return True
