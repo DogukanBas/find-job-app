@@ -5,6 +5,7 @@ from psycopg2.errors import *
 
 
 Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
+
 def registerEmployer(employer,account):
     if(employer.employerName == None) :
         return "Name cannot be empty."
@@ -92,26 +93,111 @@ def loginCheck(account):
     try:
         print(account.userName) 
         print(account.password)
-        query = "SELECT userType FROM account where username = %s and pass = %s"
+        query = "SELECT userType,accountid FROM account where username = %s and pass = %s"
         values = (account.userName, account.password)
         cur.execute(query,values) 
-        userType = cur.fetchone()
-        
-        if(userType == None):
+        accountInfo = cur.fetchone()
+        # accountInfo[0] = userType , accountInfo[1] = accountId
+        if(accountInfo == None):
             print("No such user")
-            return "No such user"
+            return "No such user", None
         
         else:
-            if(userType[0] == True):
-                return "Employee"
+            if(accountInfo[0] == True):
+                return "Employee", accountInfo[1]
             else:
-                return "Employer"
+                return "Employer", accountInfo[1]
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
+    
 
+def checkExistanceEducation(education): 
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        query = "SELECT * FROM employee_education where employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
+        values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
+        cur.execute(query,values) 
+        education = cur.fetchone()
         
+        if(education == None):
+            return False
+        else:
+            return education
+                
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
 
-# login(Account(0,"usernaeme","1234","false"))
-# registerEmployer(Employer(0,"aktif","1234","bakirkoy"),Account(0,"usernaeme","1234","False"))
+    
+#okul_eslesmesi  : okul adı, isbulan_id,baslangıc yılı, bitis yili, okul tipi(enum)
+def addEducation(education):
+    if(education.schoolName == None or education.startDate == None or education.schoolType == None):
+        return "School name, start date and school type cannot be empty."
+    
+    if(education.endDate != None and education.endDate < education.startDate): 
+        return "End date cannot be before start date."
+    
+    if(checkExistanceEducation(education)):
+        print("School already exists")
+        return "School already exists"
+    
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        insertQuery = "INSERT INTO employee_education (employeeid, schoolname, startdate, enddate, schooltype) VALUES (%s, %s, %s, %s, %s)"
+        values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+    
+
+def updateEducation(oldEducation,newEducation):
+    if(newEducation.schoolName == None or newEducation.startDate == None or newEducation.schoolType == None):
+        return "School name, start date and school type cannot be empty."
+    
+    if(newEducation.endDate != None and newEducation.endDate < newEducation.startDate):
+        return "End date cannot be before start date."
+    
+    if(checkExistanceEducation(newEducation)):
+        print("School already exists")
+        return "School already exists"
+    
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+
+    try:
+        insertQuery = "UPDATE employee_education SET schoolname = %s, startdate = %s, enddate = %s, schooltype = %s WHERE employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
+        values = (newEducation.schoolName, newEducation.startDate, newEducation.endDate, newEducation.schoolType,oldEducation.employeeId, oldEducation.schoolName, oldEducation.startDate, oldEducation.endDate, oldEducation.schoolType)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+
+def deleteEducation(education):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    
+    try:
+        insertQuery = "DELETE FROM employee_education WHERE employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
+        values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error

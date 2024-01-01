@@ -32,8 +32,8 @@ class Employee:
         if(employeeAddress == ""):
             self.employeeAddress = None
 
+
 class Employer:
-   
     def __init__ (self,employerId,employerName,employerPhone,employerAdress):
         self.employerId = employerId
         self.employerName = employerName
@@ -48,7 +48,26 @@ class Employer:
             self.employerPhone = None
         if(employerAdress == ""):
             self.employerAdress = None
-    
+
+
+class Education:
+    def __init__(self,employeeId,schoolName,startDate,endDate,schoolType):
+        self.employeeId = employeeId
+        self.schoolName = schoolName
+        self.startDate = startDate
+        self.endDate = endDate
+        self.schoolType = schoolType
+        
+        if(self.startDate == ""):
+            self.startDate = None
+        if(self.endDate == ""):
+            self.endDate = None
+        if(self.department == ""):
+            self.department = None
+        if(self.schoolName == ""):
+            self.schoolName = None
+        if(self.schoolType == ""):
+            self.schoolType = None
     
 class Experience:
     def __init__(self,employeeId,startDate,endDate,positionName,companyName):
@@ -68,6 +87,5 @@ class Experience:
             self.companyName = None
         
     def getExperience(self,employeeId):
-        
         return self.employeeId
     
