@@ -3,11 +3,10 @@ import Backend.Helper as Helper
 from Backend.Entities import *
 from psycopg2.errors import *
 
-
+Helper.DataBaseConnector.singleton = Helper.DataBaseConnector()
 def registerEmployer(employer,account):
-    
     if(employer.employerName == None) :
-        return "Name and Surname cannot be empty."
+        return "Name cannot be empty."
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
@@ -22,30 +21,38 @@ def registerEmployer(employer,account):
         conn.commit()
 
     except( psycopg2.errors.UniqueViolation) as error:
-        print("UniqueViolation")
+        print("UniqueViolation" + employer.employerName + " " + employer.employerPhone + " " + employer.employerAdress)
+        conn.rollback()
         return "The username already taken. Please try another one."
     
     except( psycopg2.errors.NotNullViolation) as error2:
         print("NotNullViolation")
+        conn.rollback()
         return "Username and password cannot be empty."    
     
     except( psycopg2.DatabaseError) as error:
         print("Transaction")
+        print(error)
+        conn.rollback()
         return ("Unvalid Phone Number. Please try again.")
     except(Exception) as error:
         print(error)
+        conn.rollback()
         return "Unknown error"
     
     return True
 
 
 def registerEmployee(employee,account):
-    if(employee.employeeName==None or employee.employeeSurname==None):
+    if (employee.employeeName == None or employee.employeeSurname == None):
         return "Name and Surname cannot be empty."
+     
+        
     ##check password in sql
 
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
+    # set save point
     try:
         insertQuery="INSERT INTO account(accountId,username,pass,userType) VALUES(%s,%s,%s,%s)"
         cur.execute("SELECT nextval('accountIdGenerator')")
@@ -58,38 +65,44 @@ def registerEmployee(employee,account):
         conn.commit()
     except(psycopg2.errors.UniqueViolation) as error:
         print("UniqueViolation")
+        conn.rollback()
         return "The username already taken. Please try another one."
     
     except( psycopg2.errors.NotNullViolation) as error2:
         print("NotNullViolation")
+        conn.rollback()
         return "Username and password cannot be empty."   
     
     except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
         print("Transaction")
+        conn.rollback()
         return ("Unvalid Phone Number. Please try again.")
     
     return True
 
 
 def loginCheck(account):
+    if(account.userName is None or account.password is None):
+        print("returned")
+        return "Username and password cannot be empty."
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
         print(account.userName) 
         print(account.password)
-        query = "SELECT * FROM account"
+        query = "SELECT userType FROM account where username = %s and pass = %s"
         values = (account.userName, account.password)
         cur.execute(query,values) 
         userType = cur.fetchone()
-        print(len(userType))
-        print(userType[0][0])
         
-        if(len(userType) == 0):
+        if(userType == None):
             print("No such user")
             return "No such user"
+        
         else:
-            if(userType[0][0] == "True"):
+            if(userType[0] == "True"):
                 return "Employee"
             else:
                 return "Employer"
@@ -97,6 +110,8 @@ def loginCheck(account):
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
+
+
         
 
 # login(Account(0,"usernaeme","1234","false"))
