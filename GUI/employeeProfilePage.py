@@ -4,8 +4,9 @@ from Backend import sql_servis as Service
 from Backend import Entities
 from tkinter import messagebox
 from tkinter.ttk import Combobox
-#import ttkbootstrap as tb
 from tkcalendar import Calendar
+from datetime import datetime
+
 
 def showPage(tab2,employeeId):
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
@@ -42,8 +43,14 @@ def showPage(tab2,employeeId):
     for col in schoolColumns:
         schoolList.heading(col, text=col)
 
-    schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    schoolList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
+    educationList = Service.getEducation(employeeId)
+    
+    for edu in educationList: 
+        schoolList.insert('', 'end', text="1", values=(edu.schoolName, edu.schoolType, edu.startDate, edu.endDate))
+        
+   
+
+     
     # Insert the data in Treeview widget
     schoolList.grid(row=6,padx=5,pady=5,columnspan=3)
     
@@ -79,25 +86,21 @@ def showPage(tab2,employeeId):
         startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
         endDateCalendar = Calendar(addSchoolTop)
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
-        # startDateCalendar = tb.DateEntry(addSchoolTop,bootstyle='danger')
-        # startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
-        # endDateCalendar = tb.DateEntry(addSchoolTop,bootstyle='danger')
-        # endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitSchool():
-            print(startDateCalendar.get_date())
-            print(endDateCalendar.get_date())
+            print(startDateCalendar.selection_get())
+            print(endDateCalendar.selection_get())
 
-            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.get_date(),endDateCalendar.get_date(),comboText.get())
+            newEducation = Entities.Education(employeeId,schoolNameEntry.get(),startDateCalendar.selection_get(),endDateCalendar.selection_get(),comboText.get())
             status = Service.addEducation(newEducation)
             if(status == True):
                 print("School added")
-                messagebox.showinfo("School Add", "School added")
-                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.get_date(),endDateCalendar.get_date()))
+                #messagebox.showinfo("School Add", "School added")
+                schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
                 addSchoolTop.destroy()
             else: 
                 print(status)
-                messagebox.showinfo("School Add", status)
+                #messagebox.showinfo("School Add", status)
                 
             
         submitButton = tk.Button(addSchoolTop,text='Submit',command=submitSchool)
@@ -105,6 +108,9 @@ def showPage(tab2,employeeId):
         
     def deleteSchool():
         selectedSchool = schoolList.selection()[0]
+        schoolValues = schoolList.item(selectedSchool)['values']
+        education = Entities.Education(employeeId,schoolValues[0],schoolValues[2],schoolValues[3],schoolValues[1])
+        Service.deleteEducation(education)
         schoolList.delete(selectedSchool)
     
     def updateSchoolTopLevel():
@@ -125,8 +131,17 @@ def showPage(tab2,employeeId):
         updateSchoolTop.columnconfigure(1, weight=3)
         
         def updateSchoolInfo():
-            schoolList.item(selectedSchool,values=(updateField[0].get(),updateField[1].get(),updateField[2].get(),updateField[3].get()))
-            updateSchoolTop.destroy()
+            oldEducation = Entities.Education(employeeId,schoolValues[0],schoolValues[2],schoolValues[3],schoolValues[1])
+            neweducation = Entities.Education(employeeId,updateField[0].get(),startDateCalendar.selection_get(),endDateCalendar.selection_get(),updateField[1].get())
+            status = Service.updateEducation(oldEducation,neweducation)
+            if status == True:
+                print("School updated")
+                #messagebox.showinfo("School Update", "School updated")
+                schoolList.item(selectedSchool,values=(updateField[0].get(),updateField[1].get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
+                updateSchoolTop.destroy()
+            else:
+                print(status)
+                #messagebox.showinfo("School Update", status)
             
         schoolNameLabel = tk.Label(updateSchoolTop,text='School Name: ')
         schoolNameLabel.grid(row=0,column=0,padx=5,pady=5)
@@ -139,13 +154,25 @@ def showPage(tab2,employeeId):
         updateButton = tk.Button(updateSchoolTop,text="Update", command=updateSchoolInfo)
         updateButton.grid(row=4,column=1,padx=5,pady=5)
         #create entry fields and link them to the variables
+      
         schoolNameEntry = tk.Entry(updateSchoolTop,textvariable=updateField[0])
         schoolNameEntry.grid(row=0,column=1,padx=5,pady=5)
-        schoolTypeEntry = tk.Entry(updateSchoolTop,textvariable=updateField[1])
-        schoolTypeEntry.grid(row=1,column=1,padx=5,pady=5)
+        
+        comboText = tk.StringVar()
+        comboText = updateField[1]
+        schoolTypeComboBox = Combobox(updateSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
+        schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
+        
         startDateCalendar = Calendar(updateSchoolTop)
+        startdatetime = datetime.strptime(str(updateField[2].get()), '%Y-%m-%d')
+        
+        startDateCalendar.selection_set(startdatetime)
         startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        
         endDateCalendar = Calendar(updateSchoolTop)
+        enddatetime = datetime.strptime(str(updateField[3].get()), '%Y-%m-%d')
+ 
+        endDateCalendar.selection_set(enddatetime)
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
 
@@ -171,19 +198,7 @@ def showPage(tab2,employeeId):
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
     experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
+    
     experienceList.grid(row=9,padx=5,pady=5,columnspan=3)
     
     scrollbarExperience = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=experienceList.yview)
@@ -211,17 +226,19 @@ def showPage(tab2,employeeId):
         companyNameEntry.grid(row=0,column=1,padx=5,pady=5)
         positionEntry = tk.Entry(addExperienceTop)
         positionEntry.grid(row=1,column=1,padx=5,pady=5)
-        startDateEntry = tk.Entry(addExperienceTop)
-        startDateEntry.grid(row=2,column=1,padx=5,pady=5)
-        endDateEntry = tk.Entry(addExperienceTop)
-        endDateEntry.grid(row=3,column=1,padx=5,pady=5)
+        
+        startDateCalendar = Calendar(addExperienceTop)
+        startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        endDateCalendar = Calendar(addExperienceTop)
+        endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitExperience():
             print(companyNameEntry.get())
             print(positionEntry.get())
-            print(startDateEntry.get())
-            print(endDateEntry.get())
-            schoolList.insert('','end',values=(companyNameEntry.get(),positionEntry.get(),startDateEntry.get(),endDateEntry.get()))
+            print(startDateCalendar.get_date())
+            print(endDateCalendar.get_date())
+            
+            experienceList.insert('','end',values=(companyNameEntry.get(),positionEntry.get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
             addExperienceTop.destroy()
             
         submitButton = tk.Button(addExperienceTop,text='Submit',command=submitExperience)
@@ -267,10 +284,18 @@ def showPage(tab2,employeeId):
         companyNameEntry.grid(row=0,column=1,padx=5,pady=5)
         positionEntry = tk.Entry(updateExperienceTop,textvariable=updateField[1])
         positionEntry.grid(row=1,column=1,padx=5,pady=5)
-        startDateEntry = tk.Entry(updateExperienceTop,textvariable=updateField[2])
-        startDateEntry.grid(row=2,column=1,padx=5,pady=5)
-        endDateEntry = tk.Entry(updateExperienceTop,textvariable=updateField[3])
-        endDateEntry.grid(row=3,column=1,padx=5,pady=5)
+        
+        startDateCalendar = Calendar(updateExperienceTop)
+        startdatetime = datetime.strptime(str(updateField[2].get()), '%Y-%m-%d')
+        
+        startDateCalendar.selection_set(startdatetime)
+        startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
+        
+        endDateCalendar = Calendar(updateExperienceTop)
+        enddatetime = datetime.strptime(str(updateField[3].get()), '%Y-%m-%d')
+ 
+        endDateCalendar.selection_set(enddatetime)
+        endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
     
     addExperienceButton = ttk.Button(tab2,text='Add',command=addExperienceTopLevel)
     addExperienceButton.grid(row=10,column=0,padx=5,pady=5)

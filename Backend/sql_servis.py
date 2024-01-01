@@ -1,6 +1,7 @@
 import psycopg2
 import Backend.Helper as Helper
 from Backend.Entities import *
+import Backend.Entities as Entities
 from psycopg2.errors import *
 from datetime import datetime
 
@@ -122,11 +123,11 @@ def checkExistanceEducation(education):
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
         cur.execute(query,values) 
         education = cur.fetchone()
-        
+        print(education)
         if(education == None):
             return False
         else:
-            return education
+            return True
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -163,7 +164,9 @@ def addEducation(education):
     
 
 def updateEducation(oldEducation,newEducation):
-
+    if(oldEducation.schoolName == newEducation.schoolName and stringToDate(oldEducation.startDate).date() == stringToDate(newEducation.startDate) and stringToDate(oldEducation.endDate).date() == stringToDate(newEducation.endDate) and oldEducation.schoolType == newEducation.schoolType):
+        return True
+   
     if(newEducation.schoolName == None or newEducation.startDate == None or newEducation.schoolType == None):
         return "School name, start date and school type cannot be empty."
     
@@ -179,7 +182,7 @@ def updateEducation(oldEducation,newEducation):
 
     try:
         insertQuery = "UPDATE employee_education SET schoolname = %s, startdate = %s, enddate = %s, schooltype = %s WHERE employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
-        values = (newEducation.schoolName, newEducation.startDate, newEducation.endDate, newEducation.schoolType,oldEducation.employeeId, oldEducation.schoolName, oldEducation.startDate, oldEducation.endDate, oldEducation.schoolType)
+        values = (newEducation.schoolName, newEducation.startDate, newEducation.endDate, newEducation.schoolType,oldEducation.employeeId, oldEducation.schoolName, oldEducation.startDate,  oldEducation.endDate, oldEducation.schoolType)
         cur.execute(insertQuery,values)
         conn.commit()
         return True
@@ -207,20 +210,29 @@ def deleteEducation(education):
 def getEducation(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
-    
     try:
         query = "SELECT * FROM employee_education where employeeid = %s"
         values = (employeeId,)
-        cur.execute(query,values) 
+       
+        print(values)
+        cur.execute(query,values)
+     
         education = cur.fetchall()
-        return education
-                
+        educationList = []
+        for edu in education:
+            newEducation = Entities.Education(edu[0],edu[1],edu[2],edu[3],edu[4])
+            educationList.append(newEducation)
+     
+        return educationList
+                    
     except(Exception, psycopg2.DatabaseError) as error:
+       
         print(error)
         conn.rollback()
         return error
 
 def checkExistanceExperience(experience): 
+   
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     
@@ -324,5 +336,10 @@ def getExperience(employeeId):
         return error
     
 def stringToDate(date):
-    datetime_object = datetime.strptime(date, '%m/%d/%y')
-    return datetime_object
+    if(type(date)==str):
+        datetime_object = datetime.strptime(date, '%Y-%m-%d')
+        return datetime_object
+    else:
+        return date
+    
+ 
