@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import os.path
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -6,7 +7,8 @@ print(sys.path)
 from GUI import employeeMainPage
 from GUI import employerSignup
 from GUI import employeeSignup
-
+import Backend.sql_servis as Service
+import Backend.sql_servis as Entities
 
 
 loginForm = tk.Tk()
@@ -28,16 +30,28 @@ passwordEntry = tk.Entry(loginForm,show='*')
 passwordEntry.grid(column=1,row=1,padx=5,pady=5)
 
 def login():
-    print(usernameEntry.get())
-    print(passwordEntry.get())
+    # account = Entities.Account(None,usernameEntry.get(),passwordEntry.get(),None)
+    # status = Service.loginCheck(account)
+    # if(status == "No such user"):
+    #     print("No such user")
+    #     messagebox.showinfo(("Login Failed", status))
+    #     return
+    # elif(status == "Employee"):
+    #     print("Employee")
+    #     employeeMainPage.showPage()
+    # elif(status == "Employer"):
+    #     print("Employer")
+    #     #employerMainPage.showPage()
+    # else:
+    #     print("Error")
+    #     messagebox.showinfo(("Login Failed", status))
+    #     return
+    
     loginForm.destroy()
     employeeMainPage.showPage()
 
-
 def showPage():
     loginForm.mainloop()
-
-
 
 loginButton = tk.Button(loginForm,text='Login',command=login)
 loginButton.grid(column=1,row=2)
@@ -55,5 +69,3 @@ employerSignUpLabel.grid(column=1,row=3,padx=5,pady=5)
 employerSignUpLabel.bind("<Button-1>", lambda e: employerSignup.showPage())
 employerSignUpLabel.bind("<Enter>", lambda e: e.widget.configure(fg='blue'))
 employerSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='white'))
-
-showPage()

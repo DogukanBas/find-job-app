@@ -7,6 +7,13 @@ class Account:
         self.password = password
         self.userType = userType
 
+        if(self.userName == ""):
+            self.userName = None
+        if(self.password == ""):
+            self.password = None
+        if(self.userType == ""): 
+            self.userType = None
+        
 
 class Employee:
     def __init__(self,employeeId,employeeName,employeeSurname,employeePhone,employeeAddress):
@@ -15,6 +22,15 @@ class Employee:
         self.employeeSurname = employeeSurname
         self.employeePhone = employeePhone
         self.employeeAddress = employeeAddress
+        
+        if(employeeName == ""): 
+            self.employeeName = None
+        if(employeeSurname == ""):
+            self.employeeSurname = None
+        if(employeePhone == ""):
+            self.employeePhone = None
+        if(employeeAddress == ""):
+            self.employeeAddress = None
 
 class Employer:
    
@@ -23,6 +39,17 @@ class Employer:
         self.employerName = employerName
         self.employerPhone = employerPhone
         self.employerAdress = employerAdress
+        
+        if(employerId == ""):
+            self.employerId = None
+        if(employerName == ""):
+            self.employerName = None
+        if(employerPhone == ""):
+            self.employerPhone = None
+        if(employerAdress == ""):
+            self.employerAdress = None
+    
+    
 class Experience:
     def __init__(self,employeeId,startDate,endDate,positionName,companyName):
         self.employeeId = employeeId
@@ -30,7 +57,16 @@ class Experience:
         self.endDate = endDate
         self.positionName = positionName
         self.companyName = companyName
-
+        
+        if(self.startDate == ""):
+            self.startDate = None
+        if(self.endDate == ""):
+            self.endDate = None
+        if(self.positionName == ""):
+            self.positionName = None
+        if(self.companyName == ""):
+            self.companyName = None
+        
     def getExperience(self,employeeId):
         
         return self.employeeId
