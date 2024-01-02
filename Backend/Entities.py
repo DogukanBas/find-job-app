@@ -134,8 +134,8 @@ class Filter:
         self.positionName = positionNameFilter # None, name
         self.contractType = contractTypeFilter # No Filter, Full Time , Part Time, Intern
         
-        if(self.date == "No Filter"):
-            self.date = None
+        if(self.applicationDate == "No Filter"):
+            self.applicationDate = None
         if(self.applicationName == ""):
             self.applicationName = None
         if(self.companyName == ""):
