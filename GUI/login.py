@@ -5,6 +5,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 print(sys.path)
 from GUI import employeeMainPage
+from GUI import employerMainPage
 from GUI import employerSignupPage
 from GUI import employeeSignupPage
 import Backend.sql_servis as Service
@@ -44,8 +45,8 @@ def login():
         
     elif(status == "Employer"):
         print("Employer")
-        #loginForm.destroy()
-        #employerMainPage.showPage()
+        loginForm.destroy()
+        employerMainPage.showPage(accountId)
     elif(status == "Username and password cannot be empty."):
         print("Error")
         messagebox.showinfo(title="Login Failed", message = status)
