@@ -455,10 +455,11 @@ def getApplication(applicationId):
 
 
 def addApplication(application):
-    cur.execute("SELECT nextval('advertisementIdGenerator')")
-    advertisementId= cur.fetchone()[0]
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
+    cur.execute("SELECT nextval('advertisementIdGenerator')")
+    advertisementId= cur.fetchone()[0]
+
     try:
         insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
      
