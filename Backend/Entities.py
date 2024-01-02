@@ -88,12 +88,12 @@ class Experience:
         return self.employeeId
     
 class Application:
-    def __init__(self,employerId,applicationId,counter,applicationName,applciationDate,contractType,positionName,description):
+    def __init__(self,employerId,applicationId,counter,applicationName,applicationDate,contractType,positionName,description):
         self.employerId = employerId
         self.applicationId = applicationId
         self.counter = counter
         self.applicationName = applicationName
-        self.applicationDate = applciationDate
+        self.applicationDate = applicationDate
         self.contractType = contractType
         self.positionName = positionName
         self.description = description
@@ -110,4 +110,23 @@ class Application:
             self.positionName = None
         if(self.description == ""):
             self.description = None
+
+
+class Filter:
+    def __init__(self,dateFilter,applicationNameFilter,companyNameFilter,positionNameFilter,contractTypeFilter):
+        self.dateFilter = dateFilter # 1 : ascending, 2 : descending
+        self.applicationNameFilter = applicationNameFilter 
+        self.companyNameFilter = companyNameFilter
+        self.positionNameFilter = positionNameFilter
+        self.contractTypeFilter = contractTypeFilter
         
+        if(self.dateFilter == ""):
+            self.dateFilter = None
+        if(self.applicationNameFilter == ""):
+            self.applicationNameFilter = None
+        if(self.companyNameFilter == ""):
+            self.companyNameFilter = None
+        if(self.positionNameFilter == ""):
+            self.positionNameFilter = None
+        if(self.contractTypeFilter == ""):
+            self.contractTypeFilter = None
