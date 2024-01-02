@@ -114,19 +114,19 @@ class Application:
 
 class Filter:
     def __init__(self,dateFilter,applicationNameFilter,companyNameFilter,positionNameFilter,contractTypeFilter):
-        self.dateFilter = dateFilter # 1 : ascending, 2 : descending
-        self.applicationNameFilter = applicationNameFilter 
-        self.companyNameFilter = companyNameFilter
-        self.positionNameFilter = positionNameFilter
-        self.contractTypeFilter = contractTypeFilter
+        self.applicationDate = dateFilter # 1 No Filter, Ascending, Descending
+        self.applicationName = applicationNameFilter # None, name
+        self.companyName = companyNameFilter # None, name
+        self.positionName = positionNameFilter # None, name
+        self.contractType = contractTypeFilter # No Filter, Full Time , Part Time, Intern
         
-        if(self.dateFilter == ""):
-            self.dateFilter = None
-        if(self.applicationNameFilter == ""):
-            self.applicationNameFilter = None
-        if(self.companyNameFilter == ""):
-            self.companyNameFilter = None
-        if(self.positionNameFilter == ""):
-            self.positionNameFilter = None
-        if(self.contractTypeFilter == ""):
-            self.contractTypeFilter = None
+        if(self.date == "No Filter"):
+            self.date = None
+        if(self.applicationName == ""):
+            self.applicationName = None
+        if(self.companyName == ""):
+            self.companyName = None
+        if(self.positionName == ""):
+            self.positionName = None
+        if(self.contractType == "No Filter"):
+            self.contractType = None

@@ -544,5 +544,42 @@ def showAllApplications():
         return error
 
 
+def filterApplications(filter):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query="Select * from applications"
+        if(filter.applicationDate != None):
+            if(filter.applicationDate == "Ascending"):
+                query += " order by applicationDate asc"
+            elif(filter.applicationDate == "Descending"):
+                query += " order by applicationDate desc"
+        
+        if(filter.applicationName != None):
+            query += " intersect "
+            query += "Select * from applications where applicationName like '%" + filter.applicationName + "%'"
 
+        if(filter.companyName != None):
+            query += " intersect "
+            query += "Select * from applications where employerId in (Select employerId from employer where employerName like '%" + filter.companyName + "%')"
+        
+        if(filter.positionName != None):
+            query += " intersect "
+            query += "Select * from applications where positionName like '%" + filter.positionName + "%'"
+        
+        if(filter.contractType != None):
+            query += " intersect "
+            query += "Select * from applications where contractType like '%" + filter.contractType + "%'"
+        
+        cur.execute(query)
+        applications = cur.fetchall()
+        applicationList = []
+        for app in applications:
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            applicationList.append(newApplication)
+        return applicationList
 
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
