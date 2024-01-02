@@ -9,27 +9,53 @@ from datetime import datetime
 
 
 def showPage(tab2,employeeId):
+    
+    status, employee = Service.getEmployeeInfo(employeeId)
+    if status == True:
+        print("Employee info retrieved")
+        print(type(employee))
+        print(employee.employeeName)
+    else:
+        print(status)
+        #messagebox.showinfo("Employee Info", status)
+        return
+    
     ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Surname:").grid(column = 0,  row = 1, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Address:").grid(column = 0,  row = 2, padx = 5, pady = 5) 
     ttk.Label(tab2, text ="Phone:").grid(column = 0,  row = 3, padx = 5, pady = 5) 
     
-    nameEntry = ttk.Entry(tab2)
+    #fill employee infos
+    
+    employeeName = tk.StringVar()
+    employeeName.set(employee.employeeName)
+    employeeSurname = tk.StringVar()
+    employeeSurname.set(employee.employeeSurname)
+    employeeAddress = tk.StringVar()
+    employeeAddress.set(employee.employeeAddress)
+    employeePhone = tk.StringVar()
+    employeePhone.set(employee.employeePhone)
+
+    nameEntry = tk.Entry(tab2,textvariable=employeeName)
     nameEntry.grid(row=0,column=1,padx=5,pady=5)
-    surnameEntry = ttk.Entry(tab2)
+    surnameEntry = tk.Entry(tab2,textvariable=employeeSurname)
     surnameEntry.grid(row=1,column=1,padx=5,pady=5)
-    addressEntry = ttk.Entry(tab2)
+    addressEntry = tk.Entry(tab2,textvariable=employeeAddress)
     addressEntry.grid(row=2,column=1,padx=5,pady=5)
-    phoneEntry = ttk.Entry(tab2)
+    phoneEntry = tk.Entry(tab2,textvariable=employeePhone)
     phoneEntry.grid(row=3,column=1,padx=5,pady=5)
+
+    def updateInfos():
+        newEmployee = Entities.Employee(employeeId,employeeName.get(),employeeSurname.get(),employeePhone.get(),employeeAddress.get())
+        status = Service.updateEmployeeInfo(newEmployee)
+        if status == True:
+            print("Employee info updated")
+            #messagebox.showinfo("Employee Info", "Employee info updated")
+        else:
+            print(status)
+            #messagebox.showinfo("Employee Info", status)
     
-    def saveInfos():
-        print(nameEntry.get())
-        print(surnameEntry.get())
-        print(addressEntry.get())
-        print(phoneEntry.get())
-    
-    saveButton = ttk.Button(tab2,text='Save',command=saveInfos)
+    saveButton = ttk.Button(tab2,text='Save',command=updateInfos)
     saveButton.grid(row=4,column=1,padx=5,pady=5)
     
     #list past experiences in multi column list
