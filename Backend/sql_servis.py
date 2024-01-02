@@ -462,11 +462,13 @@ def addApplication(application):
     try:
         insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
      
-     
-        values = (advertisementId,application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+        applicationDate= datetime.now().strftime("%Y-%m-%d")
+        values = (advertisementId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+        
         cur.execute(insertQuery,values)
         conn.commit()
-        return True
+        return True, Entities.Application(advertisementId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+    
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
