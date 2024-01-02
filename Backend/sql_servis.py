@@ -577,9 +577,9 @@ def filterApplications(filter):
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
             applicationList.append(newApplication)
-        return applicationList
+        return True,applicationList
 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
-        return error
+        return False,error
