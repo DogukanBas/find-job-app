@@ -530,7 +530,7 @@ def showAllApplications(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
+        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         cur.execute(query) 
         applications = cur.fetchall()
         print(applications)
