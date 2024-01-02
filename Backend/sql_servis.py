@@ -542,7 +542,7 @@ def showAllApplications():
             cur.execute(query,values)
             employerName=cur.fetchone()[0]
             print("employename: ",employerName)    
-            applicationList.append(employerName,newApplication)
+            applicationList.append((employerName,newApplication))
         return applicationList
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -586,7 +586,7 @@ def filterApplications(filter):
             values=(app[0],)
             cur.execute(query,values)
             employerName=cur.fetchone()[0]
-            applicationList.append(employerName,newApplication)
+            applicationList.append((employerName,newApplication))
 
         return True,applicationList
 
