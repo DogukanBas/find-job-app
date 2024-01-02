@@ -577,7 +577,7 @@ def filterApplications(employeeId,filter):
             query += " intersect "
             query += "Select * from applications where contractType like '%" + filter.contractType + "%'"
         
-        query += " except in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
+        query += " except exists (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
 
         cur.execute(query)
         applications = cur.fetchall()
