@@ -388,4 +388,70 @@ def stringToDate(date):
     else:
         return date
     
- 
+ #EMPLOYER FUNCTIONS
+
+def getEmployerInfo(employerId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM employer where employerId = %s"
+        values = (employerId,)
+        cur.execute(query,values) 
+        employer = cur.fetchone()
+        newEmployer = Entities.Employer(employer[0],employer[1],employer[2],employer[3])
+        return True,newEmployer
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return False,error
+
+def updateEmployerInfo(employer):
+    if(employer.employerName == None):
+        return "Name cannot be empty."
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "UPDATE employer SET employerName = %s, employerPhone = %s, employerAddress = %s where employerId = %s"
+        values = (employer.employerName, employer.employerPhone,employer.employerAdress, employer.employerId)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+def getApplications(employerId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM application where employerId = %s"
+        values = (employerId,)
+        cur.execute(query,values) 
+        applications = cur.fetchall()
+        applicationList = []
+        for app in applications:
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            applicationList.append(newApplication)
+        return applicationList
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+def getApplication(applicationId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM application where applicationId = %s"
+        values = (applicationId,)
+        cur.execute(query,values) 
+        application = cur.fetchone()
+        newApplication = Entities.Application(application[0],application[1],application[2],application[3],application[4],application[5],application[6],application[7])
+        return newApplication
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+
+    

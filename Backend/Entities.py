@@ -87,3 +87,26 @@ class Experience:
     def getExperience(self,employeeId):
         return self.employeeId
     
+class Application:
+    def __init__(self,employerId,applicationId,counter,applicationname,applciationdate,contracttype,positionname,description):
+        self.employerId = employerId
+        self.applicationId = applicationId
+        self.counter = counter
+        self.applicationname = applicationname
+        self.applciationdate = applciationdate
+        self.contracttype = contracttype
+        self.positionname = positionname
+        self.description = description
+        if(self.counter == ""):
+            self.counter = None
+        if(self.applicationname == ""):
+            self.applicationname = None
+        if(self.applciationdate == ""):
+            self.applciationdate = None
+        if(self.contracttype == ""):
+            self.contracttype = None
+        if(self.positionname == ""):
+            self.positionname = None
+        if(self.description == ""):
+            self.description = None
+    
