@@ -88,25 +88,26 @@ class Experience:
         return self.employeeId
     
 class Application:
-    def __init__(self,employerId,applicationId,counter,applicationname,applciationdate,contracttype,positionname,description):
+    def __init__(self,employerId,applicationId,counter,applicationName,applciationDate,contractType,positionName,description):
         self.employerId = employerId
         self.applicationId = applicationId
         self.counter = counter
-        self.applicationname = applicationname
-        self.applciationdate = applciationdate
-        self.contracttype = contracttype
-        self.positionname = positionname
+        self.applicationName = applicationName
+        self.applicationDate = applciationDate
+        self.contractType = contractType
+        self.positionName = positionName
         self.description = description
+        
         if(self.counter == ""):
             self.counter = None
-        if(self.applicationname == ""):
-            self.applicationname = None
-        if(self.applciationdate == ""):
-            self.applciationdate = None
-        if(self.contracttype == ""):
-            self.contracttype = None
-        if(self.positionname == ""):
-            self.positionname = None
+        if(self.applicationName == ""):
+            self.applicationName = None
+        if(self.applicationDate == ""):
+            self.applicationDate = None
+        if(self.contractType == ""):
+            self.contractType = None
+        if(self.positionName == ""):
+            self.positionName = None
         if(self.description == ""):
             self.description = None
-    
+        

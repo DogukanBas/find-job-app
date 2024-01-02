@@ -454,4 +454,47 @@ def getApplication(applicationId):
         return error
 
 
-    
+def addApplication(application):
+    #employerId,applicationId,counter,applicationname,applciationdate,contracttype,positionname,description
+    if(application.applicationName == None or application.applicationDate == None or application.contractType == None or application.positionName == None):
+        return "Application name, application date, contract type and position cannot be empty."
+    conn=Helper.DataBaseConnector.singleton.connection
+    cur=Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "INSERT INTO application (employerId, applicationName, applicationDate, contractType, positionName, description) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (application.employerId, application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+def deleteApplication(applicationId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "DELETE FROM application WHERE applicationId = %s"
+        values = (applicationId,)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+def updateApplication(application):
+    if(application.applicationName == None or application.applicationDate == None or application.contractType == None or application.positionName == None):
+        return "Application name, application date, contract type and position cannot be empty."
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "UPDATE application SET applicationName = %s, applicationDate = %s, contractType = %s, positionName = %s, description = %s WHERE applicationId = %s"
+        values = (application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description,application.applicationId)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
