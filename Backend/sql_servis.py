@@ -597,14 +597,13 @@ def filterApplications(employeeId,filter):
         return False,error
     
 
-def applyApplication(employeeId,application):
-    applicationId=application.applicationId
+def applyApplication(appliedApplication):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        insertQuery = "INSERT INTO appliedapplications (employeeId, applicationId, status, applicationDate) VALUES (%s, %s, %s, %s)"
+        insertQuery = "INSERT INTO appliedapplications (employeeId, applicationId, status, applicationDate,coverLetter) VALUES (%s, %s, %s, %s, %s)"
         applicationDate= datetime.now().strftime("%Y-%m-%d")
-        values = (employeeId, applicationId, "Pending", applicationDate)
+        values = (appliedApplication.employeeId, appliedApplication.applicationId, appliedApplication.status, applicationDate, appliedApplication.coverLetter)
         cur.execute(insertQuery,values)
         conn.commit()
         return True

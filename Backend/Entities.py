@@ -112,17 +112,20 @@ class Application:
             self.description = None
 
 class AppliedApplications :
-    def __init__(self,employeeId,applicationId,status,applicationDate) :
+    def __init__(self,employeeId,applicationId,status,applicationDate,coverLetter) :
         self.employeeId = employeeId
         self.applicationId = applicationId
         self.status = status
         self.applicationDate = applicationDate
+        self.coverLetter = coverLetter
         
         if(self.status == ""):
             self.status = None
         if(self.applicationDate == ""):
             self.applicationDate = None
-            
+        if(self.coverLetter == ""):
+            self.coverLetter = None
+
 class Filter:
     def __init__(self,dateFilter,applicationNameFilter,companyNameFilter,positionNameFilter,contractTypeFilter):
         self.applicationDate = dateFilter # 1 No Filter, Ascending, Descending
