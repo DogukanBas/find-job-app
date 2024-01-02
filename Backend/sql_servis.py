@@ -550,7 +550,7 @@ def showAllApplications():
         return error
 
 
-def filterApplications(filter):
+def filterApplications(employeeId,filter):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
@@ -577,6 +577,8 @@ def filterApplications(filter):
             query += " intersect "
             query += "Select * from applications where contractType like '%" + filter.contractType + "%'"
         
+        query += " except not in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
+
         cur.execute(query)
         applications = cur.fetchall()
         applicationList = []
@@ -587,10 +589,26 @@ def filterApplications(filter):
             cur.execute(query,values)
             employerName=cur.fetchone()[0]
             applicationList.append((employerName,newApplication))
-
         return True,applicationList
 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
         return False,error
+    
+
+def applyApplication(employeeId,application):
+    applicationId=application.applicationId
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "INSERT INTO appliedapplications (employeeId, applicationId, status, applicationDate) VALUES (%s, %s, %s, %s)"
+        applicationDate= datetime.now().strftime("%Y-%m-%d")
+        values = (employeeId, applicationId, "Pending", applicationDate)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
