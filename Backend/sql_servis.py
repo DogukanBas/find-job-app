@@ -533,6 +533,7 @@ def showAllApplications(employeeId):
         query="Select * from applications where  applicationId not in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
         cur.execute(query) 
         applications = cur.fetchall()
+        print(applications)
         applicationList = []
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
