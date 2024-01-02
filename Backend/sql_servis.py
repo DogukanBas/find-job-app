@@ -424,7 +424,7 @@ def getApplications(employerId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM application where employerId = %s"
+        query = "SELECT * FROM applications where employerId = %s"
         values = (employerId,)
         cur.execute(query,values) 
         applications = cur.fetchall()
@@ -442,7 +442,7 @@ def getApplication(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM application where applicationId = %s"
+        query = "SELECT * FROM applications where applicationId = %s"
         values = (applicationId,)
         cur.execute(query,values) 
         application = cur.fetchone()
@@ -461,7 +461,7 @@ def addApplication(application):
     conn=Helper.DataBaseConnector.singleton.connection
     cur=Helper.DataBaseConnector.singleton.cursor
     try:
-        insertQuery = "INSERT INTO application (employerId, applicationName, applicationDate, contractType, positionName, description) VALUES (%s, %s, %s, %s, %s, %s)"
+        insertQuery = "INSERT INTO applications (employerId, applicationName, applicationDate, contractType, positionName, description) VALUES (%s, %s, %s, %s, %s, %s)"
         values = (application.employerId, application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description)
         cur.execute(insertQuery,values)
         conn.commit()
@@ -474,7 +474,7 @@ def deleteApplication(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        insertQuery = "DELETE FROM application WHERE applicationId = %s"
+        insertQuery = "DELETE FROM applications WHERE applicationId = %s"
         values = (applicationId,)
         cur.execute(insertQuery,values)
         conn.commit()
@@ -489,7 +489,7 @@ def updateApplication(application):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        insertQuery = "UPDATE application SET applicationName = %s, applicationDate = %s, contractType = %s, positionName = %s, description = %s WHERE applicationId = %s"
+        insertQuery = "UPDATE applications SET applicationName = %s, applicationDate = %s, contractType = %s, positionName = %s, description = %s WHERE applicationId = %s"
         values = (application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description,application.applicationId)
         cur.execute(insertQuery,values)
         conn.commit()
