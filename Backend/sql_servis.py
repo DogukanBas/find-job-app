@@ -84,6 +84,37 @@ def registerEmployee(employee,account):
     
     return True
 
+def getEmployeeInfo(employeeId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM employee where employeeId = %s"
+        values = (employeeId,)
+        cur.execute(query,values) 
+        employee = cur.fetchone()
+        newEmployee = Entities.Employee(employee[0],employee[1],employee[2],employee[3],employee[4])
+        return newEmployee
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+def updateEmployeeInfo(employee):
+    if (employee.employeeName == None or employee.employeeSurname == None):
+        return "Name and Surname cannot be empty."
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "UPDATE employee SET employeeName = %s, employeeSurname = %s, employeePhone = %s, employeeAddress = %s where employeeId = %s"
+        values = (employee.employeeName, employee.employeeSurname,employee.employeePhone,employee.employeeAddress, employee.employeeId)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+    return True 
 
 def loginCheck(account):
     if(account.userName is None or account.password is None):
@@ -135,7 +166,6 @@ def checkExistanceEducation(education):
         return error
 
     
-#okul_eslesmesi  : okul adı, isbulan_id,baslangıc yılı, bitis yili, okul tipi(enum)
 def addEducation(education):
     if(education.schoolName == None or education.startDate == None or education.schoolType == None):
         return "School name, start date and school type cannot be empty."
