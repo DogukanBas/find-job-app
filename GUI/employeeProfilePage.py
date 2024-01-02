@@ -110,8 +110,14 @@ def showPage(tab2,employeeId):
         selectedSchool = schoolList.selection()[0]
         schoolValues = schoolList.item(selectedSchool)['values']
         education = Entities.Education(employeeId,schoolValues[0],schoolValues[2],schoolValues[3],schoolValues[1])
-        Service.deleteEducation(education)
-        schoolList.delete(selectedSchool)
+        status = Service.deleteEducation(education)
+        if status == True:
+            print("School deleted")
+            #messagebox.showinfo("School Delete", "School deleted")
+            schoolList.delete(selectedSchool)
+        else:
+            print(status)
+            #messagebox.showinfo("School Delete", status)
     
     def updateSchoolTopLevel():
         selectedSchool = schoolList.selection()[0]
@@ -195,9 +201,10 @@ def showPage(tab2,employeeId):
         experienceList.heading(col, text=col)
 
     # Insert the data in Treeview widget
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
-    experienceList.insert('', 'end', text="1", values=('Bosch', 'intern', '2023','2023'))
+    experiences = Service.getExperience(employeeId)
+    
+    for exp in experiences: 
+        experienceList.insert('', 'end', text="1", values=(exp.companyName, exp.positionName, exp.startDate, exp.endDate))
     
     experienceList.grid(row=9,padx=5,pady=5,columnspan=3)
     
@@ -233,21 +240,33 @@ def showPage(tab2,employeeId):
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
         def submitExperience():
-            print(companyNameEntry.get())
-            print(positionEntry.get())
-            print(startDateCalendar.get_date())
-            print(endDateCalendar.get_date())
-            
-            experienceList.insert('','end',values=(companyNameEntry.get(),positionEntry.get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
-            addExperienceTop.destroy()
+            newExperience = Entities.Experience(employeeId,startDateCalendar.selection_get(),endDateCalendar.selection_get(),positionEntry.get(),companyNameEntry.get())
+            status = Service.addExperience(newExperience)
+            if(status == True):
+                print("Experience added")
+                #messagebox.showinfo("Experience Add", "Experience added")
+                experienceList.insert('', 'end',values=(newExperience.companyName,newExperience.positionName,newExperience.startDate,newExperience.endDate))
+                addExperienceTop.destroy()
+            else:
+                print(status)
+                #messagebox.showinfo("Experience Add", status)
             
         submitButton = tk.Button(addExperienceTop,text='Submit',command=submitExperience)
         submitButton.grid(row=4,column=1,padx=5,pady=5)
     
     def deleteExperience():
         selectedExperience = experienceList.selection()[0]
-        experienceList.delete(selectedExperience)
-        
+        experienceValues = experienceList.item(selectedExperience)['values']
+        experience = Entities.Experience(employeeId,experienceValues[2],experienceValues[3],experienceValues[1],experienceValues[0])
+        status = Service.deleteExperience(experience)
+        if(status == True):
+            print("Experience deleted")
+            #messagebox.showinfo("Experience Delete", "Experience deleted")
+            experienceList.delete(selectedExperience)
+        else:
+            print(status)
+            #messagebox.showinfo("Experience Delete", status)
+            
     def updateExperienceTopLevel():
         selectedExperience = experienceList.selection()[0]
         experienceValues = experienceList.item(selectedExperience)['values']
@@ -266,8 +285,17 @@ def showPage(tab2,employeeId):
         updateExperienceTop.columnconfigure(1, weight=3)
         
         def updateExperienceInfo():
-            experienceList.item(selectedExperience,values=(updateField[0].get(),updateField[1].get(),updateField[2].get(),updateField[3].get()))
-            updateExperienceTop.destroy()
+            oldExperience = Entities.Experience(employeeId,experienceValues[2],experienceValues[3],experienceValues[1],experienceValues[0])
+            newExperience = Entities.Experience(employeeId,startDateCalendar.selection_get(),endDateCalendar.selection_get(),updateField[1].get(),updateField[0].get())
+            status = Service.updateExperience(oldExperience,newExperience)
+            if status == True:
+                print("Experience updated")
+                #messagebox.showinfo("Experience Update", "Experience updated")
+                experienceList.item(selectedExperience,values=(updateField[0].get(),updateField[1].get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
+                updateExperienceTop.destroy()
+            else:
+                print(status)
+                #messagebox.showinfo("Experience Update", status)
             
         companyNameLabel = tk.Label(updateExperienceTop,text='Company Name: ')
         companyNameLabel.grid(row=0,column=0,padx=5,pady=5)
