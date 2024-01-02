@@ -554,7 +554,7 @@ def filterApplications(employeeId,filter):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications"
+        query="Select * from applicationswhere  applicationId not in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
         if(filter.applicationDate != None):
             if(filter.applicationDate == "Ascending"):
                 query += " order by applicationDate asc"
@@ -577,7 +577,6 @@ def filterApplications(employeeId,filter):
             query += " intersect "
             query += "Select * from applications where contractType like '%" + filter.contractType + "%'"
         
-        query += " except (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
 
         cur.execute(query)
         applications = cur.fetchall()
