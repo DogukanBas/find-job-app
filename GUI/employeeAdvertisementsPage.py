@@ -32,7 +32,7 @@ def showPage(tab1,employeeId,root):
     
     def filter():
         filter = Entities.Filter(dateComboBox.get(),applicationNameEntry.get(),companyNameEntry.get(),positionNameEntry.get(),contractTypeComboBox.get())
-        status, filteredApplications = Service.filterApplications(filter)
+        status, filteredApplications = Service.filterApplications(employeeId,filter)
         if status == True:
             print("Applications filtered")
             applicationListView.delete(*applicationListView.get_children())
@@ -52,7 +52,7 @@ def showPage(tab1,employeeId,root):
     for col in applicationColumns:
         applicationListView.heading(col, text=col)
 
-    applicationList = Service.showAllApplications()
+    applicationList = Service.showAllApplications(employeeId)
     print(applicationList)
     for app in applicationList: 
         applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
@@ -64,20 +64,35 @@ def showPage(tab1,employeeId,root):
     scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
     
     def apply():
-        selectedApplication = applicationListView.item(applicationListView.selection())['values']
-        if(selectedApplication == ""):
-            print("No application selected")
-            return
-        else:
-            print(selectedApplication)
-            newApplication = Entities.Application(employeeId,selectedApplication[0],selectedApplication[3]+1,selectedApplication[1],None,selectedApplication[4],selectedApplication[5],selectedApplication[6])
-            status = Service.applyToApplication(newApplication)
-            if(status == True):
-                print("Application successful")
-                #messagebox.showinfo("Apply", "Application successful")
+        selectedApplication = applicationListView.item(applicationListView.selection()[0])['values']
+        coverLetterTopLevel = tk.Toplevel(tab1)
+        coverLetterTopLevel.title('Cover Letter')
+        coverLetterTopLevel.resizable(False,False)
+        coverLabel = tk.Label(coverLetterTopLevel,text="Cover Letter")
+        coverLabel.grid(row=0,column=0,padx=5,pady=5)
+        coverLetterEntry = tk.Text(coverLetterTopLevel)
+        coverLetterEntry.grid(row=1,column=0,padx=5,pady=5)
+        
+        def send():
+            coverLetter = coverLetterEntry.get("1.0",tk.END)
+            if(selectedApplication == ""):
+                print("No application selected")
+                return
             else:
-                print("Application failed")
-                #messagebox.showerror("Apply", f"Application failed - {status}")
+                print(selectedApplication)
+                appliedApplication = Entities.AppliedApplications(employeeId,selectedApplication[0],'waiting',None,coverLetter)
+                status = Service.applyApplication(appliedApplication)
+                if(status == True):
+                    print("Application successful")
+                    applicationListView.delete(applicationListView.selection()[0])
+                    coverLetterTopLevel.destroy()
+                    #messagebox.showinfo("Apply", "Application successful")
+                else:
+                    print("Application failed")
+                    #messagebox.showerror("Apply", f"Application failed - {status}")
+                    
+        sendButton = tk.Button(coverLetterTopLevel,text="Send",command=send)
+        sendButton.grid(row=2,column=0,padx=5,pady=5)
     
     applyButton = tk.Button(tab1,text='Apply',command=apply)
     applyButton.grid(row=6,column=2,padx=5,pady=5)
