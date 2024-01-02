@@ -536,7 +536,13 @@ def showAllApplications():
         applicationList = []
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
-            applicationList.append(newApplication)
+            query="SELECT employername FROM employer where employerId = %s"
+            values=(app[0],)
+
+            cur.execute(query,values)
+            employerName=cur.fetchone()[0]
+            print("employename: ",employerName)    
+            applicationList.append(employerName,newApplication)
         return applicationList
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -576,7 +582,12 @@ def filterApplications(filter):
         applicationList = []
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
-            applicationList.append(newApplication)
+            query="SELECT employername FROM employer where employerId = %s"
+            values=(app[0],)
+            cur.execute(query,values)
+            employerName=cur.fetchone()[0]
+            applicationList.append(employerName,newApplication)
+
         return True,applicationList
 
     except(Exception, psycopg2.DatabaseError) as error:
