@@ -93,11 +93,11 @@ def getEmployeeInfo(employeeId):
         cur.execute(query,values) 
         employee = cur.fetchone()
         newEmployee = Entities.Employee(employee[0],employee[1],employee[2],employee[3],employee[4])
-        return newEmployee
+        return True,newEmployee
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
-        return error
+        return False,error
 
 def updateEmployeeInfo(employee):
     if (employee.employeeName == None or employee.employeeSurname == None):
