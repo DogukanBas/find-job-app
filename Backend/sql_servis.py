@@ -555,7 +555,7 @@ def filterApplications(employeeId,filter):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from applied_applications where employeeId = " + str(employeeId) + ")"
+        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         if(filter.applicationDate != None):
             if(filter.applicationDate == "Ascending"):
                 query += " order by applicationDate asc"
