@@ -455,14 +455,15 @@ def getApplication(applicationId):
 
 
 def addApplication(application):
-    #employerId,applicationId,counter,applicationname,applciationdate,contracttype,positionname,description
-    if(application.applicationName == None or application.applicationDate == None or application.contractType == None or application.positionName == None):
-        return "Application name, application date, contract type and position cannot be empty."
-    conn=Helper.DataBaseConnector.singleton.connection
-    cur=Helper.DataBaseConnector.singleton.cursor
+    cur.execute("SELECT nextval('advertisementIdGenerator')")
+    advertisementId= cur.fetchone()[0]
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        insertQuery = "INSERT INTO applications (employerId, applicationName, applicationDate, contractType, positionName, description) VALUES (%s, %s, %s, %s, %s, %s)"
-        values = (application.employerId, application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description)
+        insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+     
+     
+        values = (advertisementId,application.applicationName, application.applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
         cur.execute(insertQuery,values)
         conn.commit()
         return True
@@ -470,6 +471,9 @@ def addApplication(application):
         print(error)
         conn.rollback()
         return error
+    
+
+
 def deleteApplication(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
