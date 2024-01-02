@@ -479,9 +479,10 @@ def addApplication(application):
     
 
 
-def deleteApplication(applicationId):
+def deleteApplication(application):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
+    applicationId= application.applicationId
     try:
         insertQuery = "DELETE FROM applications WHERE applicationId = %s"
         values = (applicationId,)
