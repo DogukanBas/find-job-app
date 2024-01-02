@@ -9,7 +9,9 @@ from datetime import datetime
 from tkinter import Scrollbar
 
 
-def showPage(tab2,employeeId):
+def showPage(tab2,employeeId,root):
+    root.geometry("900x700")
+    root.update()
     canvas = tk.Canvas(tab2)
     scrollbar = ttk.Scrollbar(tab2, orient="vertical", command=canvas.yview, style='Vertical.TScrollbar')
     scrollable_frame = ttk.Frame(canvas)
@@ -370,9 +372,27 @@ def showPage(tab2,employeeId):
     deleteExperienceButton = ttk.Button(scrollable_frame,text='Delete',command=deleteExperience)
     deleteExperienceButton.grid(row=10,column=2,padx=5,pady=5)
 
-
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
+    
+    
+    # applicationColumns = ('Application Id','Application Name', 'Application Date','Counter','Contract Type', 'Position Name','Description')
+    # applicationListView = ttk.Treeview(tab1, columns=applicationColumns, show='headings')
+
+    # # set column headings
+    # for col in applicationColumns:
+    #     applicationListView.heading(col, text=col)
+
+    # applicationList = Service.showAllApplications()
+    
+    # for app in applicationList: 
+    #     applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName, app.applicationDate, app.counter, app.contractType,app.positionName,app.description))
+        
+    # applicationListView.grid(row=3,padx=5,pady=5,columnspan=5)
+    
+    # scrollbarApplications = tk.Scrollbar(tab1, orient=tk.VERTICAL, command=applicationListView.yview)
+    # applicationListView.configure(yscrollcommand=scrollbarApplications.set)
+    # scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
 
 
 

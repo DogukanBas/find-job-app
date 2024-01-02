@@ -6,8 +6,7 @@ from GUI import employeeAdvertisementsPage
 
 def showPage(employeeId):
     root = tk.Tk() 
-    root.geometry("900x700")
-    root.resizable(False, False)
+    #root.resizable(False, False)
     root.title("Main Page") 
     tabControl = ttk.Notebook(root) 
     
@@ -18,8 +17,8 @@ def showPage(employeeId):
     tabControl.add(tab2, text ='Profile') 
     tabControl.pack(expand = 1, fill ="both") 
      
-    employeeAdvertisementsPage.showPage(tab1)
-    employeeProfilePage.showPage(tab2,employeeId)
+    employeeAdvertisementsPage.showPage(tab1,employeeId,root)
+    employeeProfilePage.showPage(tab2,employeeId,root)
     
     
     
