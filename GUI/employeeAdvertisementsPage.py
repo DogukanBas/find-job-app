@@ -32,12 +32,20 @@ def showPage(tab1,employeeId,root):
     
     def filter():
         filter = Entities.Filter(dateComboBox.get(),applicationNameEntry.get(),companyNameEntry.get(),positionNameEntry.get(),contractTypeComboBox.get())
-        pass
+        status, filteredApplications = Service.filterApplications(filter)
+        if status == True:
+            print("Applications filtered")
+            applicationListView.delete(*applicationListView.get_children())
+            for app in filteredApplications:
+                applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
+        else:
+            print("Applications not filtered")
+            #messagebox.showerror("Filter", f"Applications not filtered - {status}")
     
     filterButton = tk.Button(tab1,text='Filter',command=filter)
     filterButton.grid(row=2,column=2,padx=5,pady=5)
     
-    applicationColumns = ('Application Id','Application Name', 'Application Date','Counter','Contract Type', 'Position Name','Description')
+    applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description')
     applicationListView = ttk.Treeview(tab1, columns=applicationColumns, show='headings')
 
     # set column headings
@@ -45,9 +53,9 @@ def showPage(tab1,employeeId,root):
         applicationListView.heading(col, text=col)
 
     applicationList = Service.showAllApplications()
-    
+    print(applicationList)
     for app in applicationList: 
-        applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName, app.applicationDate, app.counter, app.contractType,app.positionName,app.description))
+        applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
         
     applicationListView.grid(row=3,padx=5,pady=5,columnspan=5)
     
@@ -56,21 +64,20 @@ def showPage(tab1,employeeId,root):
     scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
     
     def apply():
-        pass
-        # selectedApplication = applicationListView.item(applicationListView.selection())['values']
-        # if(selectedApplication == ""):
-        #     print("No application selected")
-        #     return
-        # else:
-        #     print(selectedApplication)
-        #     newApplication = Entities.Application(employeeId,selectedApplication[0],selectedApplication[3]+1,selectedApplication[1],None,selectedApplication[4],selectedApplication[5],selectedApplication[6])
-        #     status = Service.applyToApplication(newApplication)
-        #     if(status == True):
-        #         print("Application successful")
-        #         #messagebox.showinfo("Apply", "Application successful")
-        #     else:
-        #         print("Application failed")
-        #         #messagebox.showerror("Apply", f"Application failed - {status}")
+        selectedApplication = applicationListView.item(applicationListView.selection())['values']
+        if(selectedApplication == ""):
+            print("No application selected")
+            return
+        else:
+            print(selectedApplication)
+            newApplication = Entities.Application(employeeId,selectedApplication[0],selectedApplication[3]+1,selectedApplication[1],None,selectedApplication[4],selectedApplication[5],selectedApplication[6])
+            status = Service.applyToApplication(newApplication)
+            if(status == True):
+                print("Application successful")
+                #messagebox.showinfo("Apply", "Application successful")
+            else:
+                print("Application failed")
+                #messagebox.showerror("Apply", f"Application failed - {status}")
     
     applyButton = tk.Button(tab1,text='Apply',command=apply)
     applyButton.grid(row=6,column=2,padx=5,pady=5)
