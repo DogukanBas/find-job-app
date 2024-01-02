@@ -455,20 +455,22 @@ def getApplication(applicationId):
 
 
 def addApplication(application):
+    if(application.applicationName == None or application.contractType == None or application.positionName == None):
+        return False,"Application name, contract type and position cannot be empty."
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     cur.execute("SELECT nextval('advertisementIdGenerator')")
-    advertisementId= cur.fetchone()[0]
+    applicationId= cur.fetchone()[0]
 
     try:
         insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
      
         applicationDate= datetime.now().strftime("%Y-%m-%d")
-        values = (advertisementId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+        values = (applicationId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
         
         cur.execute(insertQuery,values)
         conn.commit()
-        return True, Entities.Application(advertisementId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+        return True, Entities.Application(application.employerId,applicationId,0,application.applicationName,applicationDate,application.contractType,application.positionName,application.description)
     
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -490,6 +492,7 @@ def deleteApplication(applicationId):
         print(error)
         conn.rollback()
         return error
+    
 def updateApplication(application):
     if(application.applicationName == None or application.applicationDate == None or application.contractType == None or application.positionName == None):
         return "Application name, application date, contract type and position cannot be empty."
