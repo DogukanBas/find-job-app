@@ -110,10 +110,22 @@ def updateEmployeeInfo(employee):
         cur.execute(insertQuery,values)
         conn.commit()
         return True
+    except(psycopg2.errors.UniqueViolation) as error:
+        print("UniqueViolation")
+        conn.rollback()
+        return "The username already taken. Please try another one."
+    
+    except( psycopg2.errors.NotNullViolation) as error2:
+        print("NotNullViolation")
+        conn.rollback()
+        return "Username and password cannot be empty."   
+    
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
+        print("Transaction")
         conn.rollback()
-        return error
+        return ("Unvalid Phone Number. Please try again.")
+    
     return True 
 
 def loginCheck(account):
