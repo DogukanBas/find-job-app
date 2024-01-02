@@ -420,6 +420,22 @@ def updateEmployerInfo(employer):
         print(error)
         conn.rollback()
         return error
+    
+def getEmployerInfo(employerId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM employer where employerId = %s"
+        values = (employerId,)
+        cur.execute(query,values) 
+        employer = cur.fetchone()
+        newEmployer = Entities.Employer(employer[0],employer[1],employer[2],employer[3])
+        return True,newEmployer
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return False,error
+    
 def getApplications(employerId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
@@ -509,3 +525,24 @@ def updateApplication(application):
         print(error)
         conn.rollback()
         return error
+
+def showAllApplications():
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM applications"
+        cur.execute(query) 
+        applications = cur.fetchall()
+        applicationList = []
+        for app in applications:
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            applicationList.append(newApplication)
+        return applicationList
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
+
+
+
