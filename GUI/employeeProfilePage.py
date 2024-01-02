@@ -6,10 +6,24 @@ from tkinter import messagebox
 from tkinter.ttk import Combobox
 from tkcalendar import Calendar
 from datetime import datetime
+from tkinter import Scrollbar
 
 
 def showPage(tab2,employeeId):
+    canvas = tk.Canvas(tab2)
+    scrollbar = ttk.Scrollbar(tab2, orient="vertical", command=canvas.yview, style='Vertical.TScrollbar')
+    scrollable_frame = ttk.Frame(canvas)
+    scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+) 
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
     
+
     status, employee = Service.getEmployeeInfo(employeeId)
     if status == True:
         print("Employee info retrieved")
@@ -20,12 +34,12 @@ def showPage(tab2,employeeId):
         #messagebox.showinfo("Employee Info", status)
         return
     
-    ttk.Label(tab2, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
-    ttk.Label(tab2, text ="Surname:").grid(column = 0,  row = 1, padx = 5, pady = 5) 
-    ttk.Label(tab2, text ="Address:").grid(column = 0,  row = 2, padx = 5, pady = 5) 
-    ttk.Label(tab2, text ="Phone:").grid(column = 0,  row = 3, padx = 5, pady = 5) 
+    ttk.Label(scrollable_frame, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
+    ttk.Label(scrollable_frame, text ="Surname:").grid(column = 0,  row = 1, padx = 5, pady = 5) 
+    ttk.Label(scrollable_frame, text ="Address:").grid(column = 0,  row = 2, padx = 5, pady = 5) 
+    ttk.Label(scrollable_frame, text ="Phone:").grid(column = 0,  row = 3, padx = 5, pady = 5) 
     
-    #fill employee infos
+    
     
     employeeName = tk.StringVar()
     employeeName.set(employee.employeeName)
@@ -36,13 +50,13 @@ def showPage(tab2,employeeId):
     employeePhone = tk.StringVar()
     employeePhone.set(employee.employeePhone)
 
-    nameEntry = tk.Entry(tab2,textvariable=employeeName)
+    nameEntry = tk.Entry(scrollable_frame,textvariable=employeeName)
     nameEntry.grid(row=0,column=1,padx=5,pady=5)
-    surnameEntry = tk.Entry(tab2,textvariable=employeeSurname)
+    surnameEntry = tk.Entry(scrollable_frame,textvariable=employeeSurname)
     surnameEntry.grid(row=1,column=1,padx=5,pady=5)
-    addressEntry = tk.Entry(tab2,textvariable=employeeAddress)
+    addressEntry = tk.Entry(scrollable_frame,textvariable=employeeAddress)
     addressEntry.grid(row=2,column=1,padx=5,pady=5)
-    phoneEntry = tk.Entry(tab2,textvariable=employeePhone)
+    phoneEntry = tk.Entry(scrollable_frame,textvariable=employeePhone)
     phoneEntry.grid(row=3,column=1,padx=5,pady=5)
 
     def updateInfos():
@@ -55,15 +69,15 @@ def showPage(tab2,employeeId):
             print(status)
             #messagebox.showinfo("Employee Info", status)
     
-    saveButton = ttk.Button(tab2,text='Save',command=updateInfos)
+    saveButton = ttk.Button(scrollable_frame,text='Save',command=updateInfos)
     saveButton.grid(row=4,column=1,padx=5,pady=5)
     
     #list past experiences in multi column list
     
-    ttk.Label(tab2,text="School Past",font="Times 30").grid(row=5,column=1,padx=5,pady=5)
+    ttk.Label(scrollable_frame,text="School Past",font="Times 30").grid(row=5,column=1,padx=5,pady=5)
     
     schoolColumns = ('School Name', 'School Type', 'Start Date','End Date')
-    schoolList = ttk.Treeview(tab2, columns=schoolColumns, show='headings')
+    schoolList = ttk.Treeview(scrollable_frame, columns=schoolColumns, show='headings')
 
     # set column headings
     for col in schoolColumns:
@@ -80,7 +94,7 @@ def showPage(tab2,employeeId):
     # Insert the data in Treeview widget
     schoolList.grid(row=6,padx=5,pady=5,columnspan=3)
     
-    scrollbarSchool = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=schoolList.yview)
+    scrollbarSchool = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=schoolList.yview)
     schoolList.configure(yscrollcommand=scrollbarSchool.set)
     scrollbarSchool.grid(row=6,column=3, sticky='ns',padx=5,pady=5)
     
@@ -208,25 +222,23 @@ def showPage(tab2,employeeId):
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
         
 
-    addSchoolButton = ttk.Button(tab2,text='Add',command=addSchoolTopLevel)
+    addSchoolButton = ttk.Button(scrollable_frame,text='Add',command=addSchoolTopLevel)
     addSchoolButton.grid(row=7,column=0,padx=5,pady=5)
-    updateSchoolButton = ttk.Button(tab2,text='Update',command=updateSchoolTopLevel)
+    updateSchoolButton = ttk.Button(scrollable_frame,text='Update',command=updateSchoolTopLevel)
     updateSchoolButton.grid(row=7,column=1,padx=5,pady=5)
-    deleteSchoolButton = ttk.Button(tab2,text='Delete',command=deleteSchool)
+    deleteSchoolButton = ttk.Button(scrollable_frame,text='Delete',command=deleteSchool)
     deleteSchoolButton.grid(row=7,column=2,padx=5,pady=5)
         
     
     #--------------------------------------------------
-    ttk.Label(tab2,text="Experience Past",font="Times 30").grid(row=8,column=1,padx=5,pady=5)
+    ttk.Label(scrollable_frame,text="Experience Past",font="Times 30").grid(row=8,column=1,padx=5,pady=5)
     
     experienceColumns = ('Company Name', 'Position', 'Start Date','End Date')
-    experienceList = ttk.Treeview(tab2, columns=experienceColumns, show='headings')
+    experienceList = ttk.Treeview(scrollable_frame, columns=experienceColumns, show='headings')
 
-    # set column headings
     for col in experienceColumns:
         experienceList.heading(col, text=col)
 
-    # Insert the data in Treeview widget
     experiences = Service.getExperience(employeeId)
     
     for exp in experiences: 
@@ -234,7 +246,7 @@ def showPage(tab2,employeeId):
     
     experienceList.grid(row=9,padx=5,pady=5,columnspan=3)
     
-    scrollbarExperience = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=experienceList.yview)
+    scrollbarExperience = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=experienceList.yview)
     experienceList.configure(yscrollcommand=scrollbarExperience.set)
     scrollbarExperience.grid(row=9,column=3, sticky='ns',padx=5,pady=5)
     
@@ -351,12 +363,20 @@ def showPage(tab2,employeeId):
         endDateCalendar.selection_set(enddatetime)
         endDateCalendar.grid(row=3,column=1,padx=5,pady=5)
     
-    addExperienceButton = ttk.Button(tab2,text='Add',command=addExperienceTopLevel)
+    addExperienceButton = ttk.Button(scrollable_frame,text='Add',command=addExperienceTopLevel)
     addExperienceButton.grid(row=10,column=0,padx=5,pady=5)
-    updateExperienceButton = ttk.Button(tab2,text='Update',command=updateExperienceTopLevel)
+    updateExperienceButton = ttk.Button(scrollable_frame,text='Update',command=updateExperienceTopLevel)
     updateExperienceButton.grid(row=10,column=1,padx=5,pady=5)
-    deleteExperienceButton = ttk.Button(tab2,text='Delete',command=deleteExperience)
+    deleteExperienceButton = ttk.Button(scrollable_frame,text='Delete',command=deleteExperience)
     deleteExperienceButton.grid(row=10,column=2,padx=5,pady=5)
+
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+
+
+    
     
     # advertisementColumns = ('Advertisement Name', 'Advertisement Date', 'Contract Type','Position Name','Description','Counter','Application Date','Status')
     # advertisementList = ttk.Treeview(tab2, columns=advertisementColumns, show='headings')

@@ -6,11 +6,13 @@ from GUI import employeeAdvertisementsPage
 
 def showPage(employeeId):
     root = tk.Tk() 
+    root.geometry("900x700")
+    root.resizable(False, False)
     root.title("Main Page") 
     tabControl = ttk.Notebook(root) 
     
     tab1 = ttk.Frame(tabControl) 
-    tab2 = ttk.Frame(tabControl) 
+    tab2 = ttk.Frame(tabControl)
     
     tabControl.add(tab1, text ='Advertisements') 
     tabControl.add(tab2, text ='Profile') 
