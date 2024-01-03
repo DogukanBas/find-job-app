@@ -9,9 +9,7 @@ from datetime import datetime
 from tkinter import Scrollbar
 
 
-def showPage(tab2,employeeId,root):
-    root.geometry("900x700")
-    root.update()
+def showPage(tab2,employeeId):
     canvas = tk.Canvas(tab2)
     scrollbar = ttk.Scrollbar(tab2, orient="vertical", command=canvas.yview, style='Vertical.TScrollbar')
     scrollable_frame = ttk.Frame(canvas)
@@ -76,7 +74,7 @@ def showPage(tab2,employeeId,root):
     
     #list past experiences in multi column list
     
-    ttk.Label(scrollable_frame,text="School Past",font="Times 30").grid(row=5,column=1,padx=5,pady=5)
+    ttk.Label(scrollable_frame,text="Education Information",font="Times 30").grid(row=5,column=1,padx=5,pady=5)
     
     schoolColumns = ('School Name', 'School Type', 'Start Date','End Date')
     schoolList = ttk.Treeview(scrollable_frame, columns=schoolColumns, show='headings')
@@ -122,7 +120,7 @@ def showPage(tab2,employeeId,root):
         schoolNameEntry.grid(row=0,column=1,padx=5,pady=5)
         comboText = tk.StringVar()
         comboText.set("Bachelors")
-        schoolTypeComboBox = Combobox(addSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
+        schoolTypeComboBox = Combobox(addSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText,state='readonly')
         schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
         startDateCalendar = Calendar(addSchoolTop)
         startDateCalendar.grid(row=2,column=1,padx=5,pady=5)
@@ -208,7 +206,7 @@ def showPage(tab2,employeeId,root):
         
         comboText = tk.StringVar()
         comboText = updateField[1]
-        schoolTypeComboBox = Combobox(updateSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText)
+        schoolTypeComboBox = Combobox(updateSchoolTop,values=('High School','Bachelors','Masters'),textvariable=comboText,state='readonly')
         schoolTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
         
         startDateCalendar = Calendar(updateSchoolTop)
@@ -233,7 +231,7 @@ def showPage(tab2,employeeId,root):
         
     
     #--------------------------------------------------
-    ttk.Label(scrollable_frame,text="Experience Past",font="Times 30").grid(row=8,column=1,padx=5,pady=5)
+    ttk.Label(scrollable_frame,text="Experience Information",font="Times 30").grid(row=8,column=1,padx=5,pady=5)
     
     experienceColumns = ('Company Name', 'Position', 'Start Date','End Date')
     experienceList = ttk.Treeview(scrollable_frame, columns=experienceColumns, show='headings')
@@ -376,42 +374,23 @@ def showPage(tab2,employeeId,root):
     scrollbar.pack(side="right", fill="y")
     
     
-    # applicationColumns = ('Application Id','Application Name', 'Application Date','Counter','Contract Type', 'Position Name','Description')
-    # applicationListView = ttk.Treeview(tab1, columns=applicationColumns, show='headings')
+    # applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description','Apply Date','Status')
+    # applicationListView = ttk.Treeview(scrollable_frame, columns=applicationColumns, show='headings')
 
     # # set column headings
     # for col in applicationColumns:
+    #     applicationListView.column(col,minwidth=10,width=100)
     #     applicationListView.heading(col, text=col)
 
-    # applicationList = Service.showAllApplications()
-    
+    # applicationList = Service.showAllApplications(employeeId)
+    # print(applicationList)
     # for app in applicationList: 
-    #     applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName, app.applicationDate, app.counter, app.contractType,app.positionName,app.description))
+    #     applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
         
-    # applicationListView.grid(row=3,padx=5,pady=5,columnspan=5)
+    # applicationListView.grid(row=11,padx=5,pady=5,columnspan=3)
     
-    # scrollbarApplications = tk.Scrollbar(tab1, orient=tk.VERTICAL, command=applicationListView.yview)
+    # scrollbarApplications = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=applicationListView.yview)
     # applicationListView.configure(yscrollcommand=scrollbarApplications.set)
-    # scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
+    # scrollbarApplications.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
 
-
-
-    
-    
-    # advertisementColumns = ('Advertisement Name', 'Advertisement Date', 'Contract Type','Position Name','Description','Counter','Application Date','Status')
-    # advertisementList = ttk.Treeview(tab2, columns=advertisementColumns, show='headings')
-
-    # # set column headings
-    # for col in advertisementColumns:
-    #     schoolList.heading(col, text=col)
-
-    # #insert random values
-    # advertisementList.insert('', 'end', text="1", values=('Bosch', '2023', 'intern','software','işe alım', '10', '2023','waiting'))
-
-    # # Insert the data in Treeview widget
-    # schoolList.grid(row=11,padx=5,pady=5,columnspan=3)
-    
-    # scrollbarAdvertisement = ttk.Scrollbar(tab2, orient=tk.VERTICAL, command=advertisementList.yview)
-    # advertisementList.configure(yscrollcommand=scrollbarAdvertisement.set)
-    # scrollbarAdvertisement.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
     

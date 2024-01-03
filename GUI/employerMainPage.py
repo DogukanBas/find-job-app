@@ -68,7 +68,7 @@ def showPage(employerId):
         
     applicationListView.grid(row=5,padx=5,pady=5,columnspan=3)
     
-    scrollbarApplications = tk.Scrollbar(root, orient=tk.VERTICAL, command=applicationListView.yview)
+    scrollbarApplications = ttk.Scrollbar(root, orient=tk.VERTICAL, command=applicationListView.yview)
     applicationListView.configure(yscrollcommand=scrollbarApplications.set)
     scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
     
@@ -93,7 +93,7 @@ def showPage(employerId):
         applicationNameEntry.grid(row=0,column=1,padx=5,pady=5)
         comboText = tk.StringVar()
         comboText.set('Part Time')
-        contractTypeComboBox = Combobox(addApplicationTop,values=('Part Time','Full Time','Intern'),textvariable=comboText)
+        contractTypeComboBox = Combobox(addApplicationTop,values=('Part Time','Full Time','Intern'),textvariable=comboText,state='readonly')
         contractTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
         positionNameEntry = tk.Entry(addApplicationTop)
         positionNameEntry.grid(row=2,column=1,padx=5,pady=5)
@@ -162,7 +162,7 @@ def showPage(employerId):
         applicationNameEntry.grid(row=0,column=1,padx=5,pady=5)
         comboText = tk.StringVar()
         comboText = updateField[1]
-        contractTypeComboBox = Combobox(updateApplicationTop,values=('Part Time','Full Time','Intern'),textvariable=comboText)
+        contractTypeComboBox = Combobox(updateApplicationTop,values=('Part Time','Full Time','Intern'),textvariable=comboText,state='readonly')
         contractTypeComboBox.grid(row=1,column=1,padx=5,pady=5)
         positionNameEntry = tk.Entry(updateApplicationTop,textvariable=updateField[2])
         positionNameEntry.grid(row=2,column=1,padx=5,pady=5)
@@ -188,6 +188,9 @@ def showPage(employerId):
             #messagebox.showinfo("Application Delete", status)
     
     def showApplicantsTopLevel():
+        selectedApplication = applicationListView.selection()[0]
+        applicationValues = applicationListView.item(selectedApplication)['values']
+        applicationId = applicationValues[0]
         pass
     
         

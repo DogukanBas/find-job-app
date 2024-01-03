@@ -17,8 +17,8 @@ def showPage(employeeId):
     tabControl.add(tab2, text ='Profile') 
     tabControl.pack(expand = 1, fill ="both") 
      
-    employeeAdvertisementsPage.showPage(tab1,employeeId,root)
-    employeeProfilePage.showPage(tab2,employeeId,root)
+    employeeAdvertisementsPage.showPage(tab1,employeeId)
+    employeeProfilePage.showPage(tab2,employeeId)
     
     
     

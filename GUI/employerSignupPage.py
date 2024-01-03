@@ -31,7 +31,7 @@ def showPage() :
     employerAddressEntry.grid(row=2,column=1,padx=5,pady=5)
     employerUsernameEntry = tk.Entry(employerSignupForm)
     employerUsernameEntry.grid(row=3,column=1,padx=5,pady=5)
-    employerPasswordEntry = tk.Entry(employerSignupForm)
+    employerPasswordEntry = tk.Entry(employerSignupForm,show='*')
     employerPasswordEntry.grid(row=4,column=1,padx=5,pady=5)
     
     def submit():

@@ -3,9 +3,7 @@ from tkinter import ttk
 from Backend import sql_servis as Service
 from Backend import Entities
 
-def showPage(tab1,employeeId,root):
-    root.geometry("1500x700")
-    root.update()
+def showPage(tab1,employeeId):
     
     ttk.Label(tab1, text ="By Date").grid(column = 0,  row = 0, padx = 5, pady = 5)
     ttk.Label(tab1, text ="Application Name").grid(column = 1,  row = 0, padx = 5, pady = 5)
@@ -13,20 +11,20 @@ def showPage(tab1,employeeId,root):
     ttk.Label(tab1, text ="Position Name").grid(column = 3,  row = 0, padx = 5, pady = 5)
     ttk.Label(tab1, text ="Contract Type").grid(column = 4,  row = 0, padx = 5, pady = 5)   
  
-    dateComboBox = ttk.Combobox(tab1,values=('No Filter','Ascending','Descending'))
+    dateComboBox = ttk.Combobox(tab1,values=('No Filter','Ascending','Descending'),state='readonly',width=10)
     dateComboBox.set("No Filter")
     dateComboBox.grid(row=1,column=0,padx=5,pady=5)
     
-    applicationNameEntry = tk.Entry(tab1)
+    applicationNameEntry = tk.Entry(tab1,width=10)
     applicationNameEntry.grid(row=1,column=1,padx=5,pady=5)
     
-    companyNameEntry = tk.Entry(tab1)
+    companyNameEntry = tk.Entry(tab1,width=10)
     companyNameEntry.grid(row=1,column=2,padx=5,pady=5)
     
-    positionNameEntry = tk.Entry(tab1)
+    positionNameEntry = tk.Entry(tab1,width=10)
     positionNameEntry.grid(row=1,column=3,padx=5,pady=5)
     
-    contractTypeComboBox = ttk.Combobox(tab1,values=('No Filter','Full Time','Part Time','Intern'))
+    contractTypeComboBox = ttk.Combobox(tab1,values=('No Filter','Full Time','Part Time','Intern'),state='readonly',width=10)
     contractTypeComboBox.set('No Filter')
     contractTypeComboBox.grid(row=1,column=4,padx=5,pady=5)
     
@@ -50,6 +48,7 @@ def showPage(tab1,employeeId,root):
 
     # set column headings
     for col in applicationColumns:
+        applicationListView.column(col,minwidth=10,width=100)
         applicationListView.heading(col, text=col)
 
     applicationList = Service.showAllApplications(employeeId)
@@ -59,9 +58,9 @@ def showPage(tab1,employeeId,root):
         
     applicationListView.grid(row=3,padx=5,pady=5,columnspan=5)
     
-    scrollbarApplications = tk.Scrollbar(tab1, orient=tk.VERTICAL, command=applicationListView.yview)
+    scrollbarApplications = ttk.Scrollbar(tab1, orient=tk.VERTICAL, command=applicationListView.yview)
     applicationListView.configure(yscrollcommand=scrollbarApplications.set)
-    scrollbarApplications.grid(row=5,column=3, sticky='ns',padx=5,pady=5)
+    scrollbarApplications.grid(row=3,column=5, sticky='ns',padx=5,pady=5)
     
     def apply():
         selectedApplication = applicationListView.item(applicationListView.selection()[0])['values']

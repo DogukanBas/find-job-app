@@ -64,14 +64,14 @@ loginButton.grid(column=1,row=2)
 
 
 
-employeeSignUpLabel = tk.Label(loginForm,text='Employee signup',fg='white',font=('Times 15 underline'))
+employeeSignUpLabel = tk.Label(loginForm,text='Employee signup',fg='gray',font=('Times 15 underline'))
 employeeSignUpLabel.grid(column=0,row=3,padx=5,pady=5)
 employeeSignUpLabel.bind("<Button-1>", lambda e: employeeSignupPage.showPage())
 employeeSignUpLabel.bind("<Enter>", lambda e: e.widget.configure(fg='blue'))
-employeeSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='white'))
+employeeSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='gray'))
 
-employerSignUpLabel = tk.Label(loginForm,text='Employer signup',fg='white',font=('Times 15 underline'))
+employerSignUpLabel = tk.Label(loginForm,text='Employer signup',fg='gray',font=('Times 15 underline'))
 employerSignUpLabel.grid(column=1,row=3,padx=5,pady=5)
 employerSignUpLabel.bind("<Button-1>", lambda e: employerSignupPage.showPage())
 employerSignUpLabel.bind("<Enter>", lambda e: e.widget.configure(fg='blue'))
-employerSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='white'))
+employerSignUpLabel.bind("<Leave>", lambda e: e.widget.configure(fg='gray'))
