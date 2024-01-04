@@ -8,6 +8,7 @@ from tkcalendar import Calendar
 from datetime import datetime
 
 def showPage(employerId):
+
     root = tk.Tk() 
     root.title("Employer Main Page") 
     
@@ -226,9 +227,134 @@ def showPage(employerId):
         
         scrollbarApplicants = ttk.Scrollbar(applicantsTop, orient=tk.VERTICAL, command=applicantsListView.yview)
         applicantsListView.configure(yscrollcommand=scrollbarApplicants.set)
-        scrollbarApplicants.grid(row=0,column=3, sticky='ns',padx=5,pady=5)   
+        scrollbarApplicants.grid(row=0,column=3, sticky='ns',padx=5,pady=5) 
+        
+        def showDetailsTopLevel():
+            selectedApplicant = applicantsListView.selection()[0]
+            applicantValues = applicantsListView.item(selectedApplicant)['values']
+            employeeId = applicantValues[1]
+            applicationId = applicantValues[0]
+            
+            detailsTop = tk.Toplevel()
+            detailsTop.title('Details')
+            detailsTop.geometry('850x700')
+            detailsTop.resizable(False,False)
+            
+            canvas = tk.Canvas(detailsTop)
+            scrollbar = ttk.Scrollbar(detailsTop, orient="vertical", command=canvas.yview, style='Vertical.TScrollbar')
+            scrollable_frame = ttk.Frame(canvas)
+            scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+            ) 
+
+            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+            canvas.configure(yscrollcommand=scrollbar.set)
+  
+            ttk.Label(scrollable_frame,text="Education Information",font="Times 30").grid(row=0,column=0,padx=5,pady=5)
+    
+            schoolColumns = ('School Name', 'School Type', 'Start Date','End Date')
+            schoolList = ttk.Treeview(scrollable_frame, columns=schoolColumns, show='headings')
+
+            # set column headings
+            for col in schoolColumns:
+                schoolList.heading(col, text=col)
+
+            educationList = Service.getEducation(employeeId)
+            
+            for edu in educationList: 
+                schoolList.insert('', 'end', text="1", values=(edu.schoolName, edu.schoolType, edu.startDate, edu.endDate))
+            
+            # Insert the data in Treeview widget
+            schoolList.grid(row=1,padx=5,pady=5)
+            
+            scrollbarSchool = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=schoolList.yview)
+            schoolList.configure(yscrollcommand=scrollbarSchool.set)
+            scrollbarSchool.grid(row=1,column=1, sticky='ns',padx=5,pady=5)
+            
+            ttk.Label(scrollable_frame,text="Experience Information",font="Times 30").grid(row=2,column=0,padx=5,pady=5)
+            
+            experienceColumns = ('Company Name', 'Position', 'Start Date','End Date')
+            experienceList = ttk.Treeview(scrollable_frame, columns=experienceColumns, show='headings')
+
+            for col in experienceColumns:
+                experienceList.heading(col, text=col)
+
+            experiences = Service.getExperience(employeeId)
+            
+            for exp in experiences: 
+                experienceList.insert('', 'end', text="1", values=(exp.companyName, exp.positionName, exp.startDate, exp.endDate))
+            
+            experienceList.grid(row=3,padx=5,pady=5)
+            
+            scrollbarExperience = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=experienceList.yview)
+            experienceList.configure(yscrollcommand=scrollbarExperience.set)
+            scrollbarExperience.grid(row=3,column=1, sticky='ns',padx=5,pady=5)
+            
+            ttk.Label(scrollable_frame,text="Cover Letter",font="Times 30").grid(row=4,column=0,padx=5,pady=5)
+            
+            coverLetterEntry = tk.Text(scrollable_frame,width=70)
+            
+            for app in applicantsList: 
+                if app.employeeId == employeeId:
+                    coverLetter = app.coverLetter
+                    coverLetterEntry.insert(tk.INSERT, coverLetter)
+                    break
+            coverLetterEntry.config(state='disabled')
+            coverLetterEntry.grid(row=5,column=0,padx=5,pady=5)
+            
+            def approveApplication():
+                status = Service.evaluate(applicationId,employeeId,True)
+                if status == True:
+                    print("Application approved")
+                    #messagebox.showinfo("Application Approve", "Application approved")
+                    applicantsListView.delete(*applicantsListView.get_children())
+                    status , applicantsList = Service.getApplicantsView(applicationId)
+                    if status != True:
+                        #messagebox.showinfo("Error while reloading table", "Error while reloading table")
+                        return
+                    for app in applicantsList: 
+                        applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
+                    detailsTop.destroy()
+                else:
+                    print(status)
+                    #messagebox.showinfo("Application Approve", status)
+            
+            def rejectApplication():
+                status = Service.evaluate(applicationId,employeeId,False)
+                if status == True:
+                    print("Application rejected")
+                    #messagebox.showinfo("Application Reject", "Application rejected")
+                    applicantsListView.delete(*applicantsListView.get_children())
+                    status , applicantsList = Service.getApplicantsView(applicationId)
+                    if status != True:
+                        #messagebox.showinfo("Error while reloading table", "Error while reloading table")
+                        return
+                    for app in applicantsList: 
+                        applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
+                    detailsTop.destroy()
+                else:
+                    print(status)
+                    #messagebox.showinfo("Application Reject", status)
+            
+            approveButton = tk.Button(scrollable_frame,text='Approve',command=approveApplication)
+            approveButton.grid(row=6,column=0,padx=5,pady=5)
+            
+            rejectButton = tk.Button(scrollable_frame,text='Reject',command=rejectApplication)
+            rejectButton.grid(row=7,column=0,padx=5,pady=5)
+            
+            canvas.pack(side="left", fill="both", expand=True)
+            scrollbar.pack(side="right", fill="y")
     
         
+        showDetailButton = tk.Button(applicantsTop,text='Show Details and Evaluate',command=showDetailsTopLevel)
+        showDetailButton.grid(row=1,column=1,padx=5,pady=5) 
+        
+        
+            
+    
     
     addApplicationButton = tk.Button(root,text='Add',command=addApplicationTopLevel)
     addApplicationButton.grid(row=7,column=0,padx=5,pady=5)

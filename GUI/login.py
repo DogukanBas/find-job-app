@@ -14,6 +14,7 @@ import Backend.sql_servis as Entities
 
 loginForm = tk.Tk()
 loginForm.title('Login Page')
+loginForm.eval('tk::PlaceWindow . center')
 loginForm.resizable(False,False)
 
 loginForm.columnconfigure(0, weight=1)

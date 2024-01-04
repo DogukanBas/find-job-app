@@ -135,3 +135,4 @@ create sequence advertisementIdGenerator start with 1 increment by 1 no cycle;
 select * from accountIdGenerator
 
 insert into appliedApplications values(1,4,'waiting','shshsh','2020-10-12')
+update appliedApplications set status = 'approved' where employeeId = 1 and applicationId = 4
