@@ -4,8 +4,6 @@ from Backend import sql_servis as Service
 from Backend import Entities
 from tkinter import messagebox
 from tkinter.ttk import Combobox
-from tkcalendar import Calendar
-from datetime import datetime
 
 def showPage(employerId):
 
@@ -102,7 +100,7 @@ def showPage(employerId):
         descriptionEntry.grid(row=3,column=1,padx=5,pady=5)
         
         def submitApplication():
-            newApplication = Entities.Application(employerId,None,None,applicationNameEntry.get(),None,comboText.get(),positionNameEntry.get(),descriptionEntry.get("1.0","end-1c"))
+            newApplication = Entities.Application(employerId,None,None,applicationNameEntry.get(),None,comboText.get(),positionNameEntry.get(),descriptionEntry.get("1.0","end-1c"),True)
             status, app = Service.addApplication(newApplication)
             if status == True:
                 print("Application added")
@@ -137,7 +135,7 @@ def showPage(employerId):
         updateApplicationTop.columnconfigure(1, weight=3)
         
         def updateApplication():
-            app = Entities.Application(employerId,applicationValues[0],applicationValues[3],updateField[0].get(),applicationValues[2],updateField[1].get(),updateField[2].get(),descriptionEntry.get("1.0","end-1c"))
+            app = Entities.Application(employerId,applicationValues[0],applicationValues[3],updateField[0].get(),applicationValues[2],updateField[1].get(),updateField[2].get(),descriptionEntry.get("1.0","end-1c"),True)
             status = Service.updateApplication(app)
             if status == True:
                 print("Application updated")
@@ -172,13 +170,10 @@ def showPage(employerId):
         descriptionEntry.grid(row=3,column=1,padx=5,pady=5)
         
         
-        
-        
-    
     def deleteApplicationTopLevel():
         selectedApplication = applicationListView.selection()[0]
         applicationValues = applicationListView.item(selectedApplication)['values']
-        application = Entities.Application(employerId,applicationValues[0],applicationValues[3],applicationValues[1],applicationValues[2],applicationValues[4],applicationValues[5],applicationValues[6])
+        application = Entities.Application(employerId,applicationValues[0],applicationValues[3],applicationValues[1],applicationValues[2],applicationValues[4],applicationValues[5],applicationValues[6],False)
         status = Service.deleteApplication(application)
         if status == True:
             print("Application deleted")
