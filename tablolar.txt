@@ -45,7 +45,8 @@ create table applications(
 	applicationDate date,
 	contractType varchar CHECK (contractType In ('Part Time','Full Time','Intern')),
 	positionName varchar,
-	description varchar
+	description varchar,
+	isActive bool
 	);
 
 create table appliedApplications(
@@ -132,8 +133,6 @@ EXECUTE FUNCTION increaseAdvertisementCounterFunction();
 create sequence accountIdGenerator start with 1 increment by 1 no cycle;
 create sequence advertisementIdGenerator start with 1 increment by 1 no cycle;
 
-select * from accountIdGenerator
-
 create  type loginCheckType as (userType varchar, accountidd int);
 
 CREATE OR REPLACE FUNCTION loginCheck(funcUsername varchar, funcPassword varchar)
@@ -158,5 +157,20 @@ begin
     END LOOP;
     return loginInfo;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION deleteApplication(funcApplicationId int) 
+returns void as $$
+BEGIN
+	UPDATE applications
+	SET isActive = false
+	WHERE applicationId = funcApplicationId;
+
+	UPDATE appliedApplications
+	SET status = 'canceled'
+	WHERE applicationId = funcApplicationId;
+	
+END;
+$$ LANGUAGE 'plpgsql';
+
         
