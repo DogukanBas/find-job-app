@@ -52,8 +52,30 @@ create table appliedApplications(
 	employeeId int references employee(employeeId),
 	applicationId int references applications(applicationId),
 	status varchar CHECK (status In ('waiting','rejected','inprocess','approved','canceled')),
+	coverLetter varchar,
 	applicationDate date
 );
+
+CREATE VIEW applicationView AS
+SELECT
+    app.applicationId,
+    app.employerId,
+    app.counter,
+    app.applicationName,
+    app.applicationDate,
+    app.contractType,
+    app.positionName,
+    app.description,
+    aa.employeeId,
+    aa.status,
+    aa.coverLetter,
+    aa.applicationDate AS appliedApplicationDate
+FROM
+    applications app
+JOIN
+    appliedApplications aa ON app.applicationId = aa.applicationId;
+
+
 	
 CREATE OR REPLACE FUNCTION createAccountFunction()
 RETURNS TRIGGER AS $$
@@ -89,5 +111,10 @@ AFTER INSERT ON appliedApplications
 FOR EACH ROW
 WHEN (NEW.applicationId IS NOT NULL)
 EXECUTE FUNCTION increaseAdvertisementCounterFunction();
+
 create sequence accountIdGenerator start with 1 increment by 1 no cycle;
 create sequence advertisementIdGenerator start with 1 increment by 1 no cycle;
+
+select * from accountIdGenerator
+
+insert into appliedApplications values(1,4,'waiting','shshsh','2020-10-12')
