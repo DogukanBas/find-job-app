@@ -158,7 +158,7 @@ def checkExistanceEducation(education):
         query = "SELECT * FROM employee_education where employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
         cur.execute(query,values) 
-        education = cur.fetchone()
+        education = cur.fetchone()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
         print(education)
         if(education == None):
             return False
@@ -523,11 +523,14 @@ def showAllApplications(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
+        query="Select *  from applications where isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         cur.execute(query) 
         applications = cur.fetchall()
-        print(applications)
         applicationList = []
+        # query for count of applicants
+        query="SELECT COUNT(*) FROM appliedapplications"
+        cur.execute(query)
+        count = cur.fetchone()[0]
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             query="SELECT employername FROM employer where employerId = %s"
@@ -537,7 +540,7 @@ def showAllApplications(employeeId):
             employerName=cur.fetchone()[0]
             print("employename: ",employerName)    
             applicationList.append((employerName,newApplication))
-        return applicationList
+        return applicationList,count
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
@@ -547,6 +550,7 @@ def showAllApplications(employeeId):
 def filterApplications(employeeId,filter):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
+    queryCounter = "Select count(*) from ("
     try:
         query="Select * from applications where  isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         if(filter.applicationDate != None):
@@ -571,10 +575,13 @@ def filterApplications(employeeId,filter):
             query += " intersect "
             query += "Select * from applications where UPPER(contractType) like UPPER('%" + filter.contractType + "%')"
         
-
+        queryCounter += query + ")I"
         cur.execute(query)
         applications = cur.fetchall()
         applicationList = []
+        # query for count of applicants
+        cur.execute(queryCounter)
+        count = cur.fetchone()[0]
         for app in applications:
             newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             query="SELECT employername FROM employer where employerId = %s"
@@ -582,12 +589,12 @@ def filterApplications(employeeId,filter):
             cur.execute(query,values)
             employerName=cur.fetchone()[0]
             applicationList.append((employerName,newApplication))
-        return True,applicationList
+        return True,applicationList,count 
 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
-        return False,error
+        return False,error,0
     
 
 def applyApplication(appliedApplication):
