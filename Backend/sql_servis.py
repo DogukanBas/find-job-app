@@ -135,22 +135,15 @@ def loginCheck(account):
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
-        print(account.userName) 
-        print(account.password)
-        query = "SELECT userType,accountid FROM account where username = %s and pass = %s"
+        query = "SELECT * from loginCheck(%s,%s)"
         values = (account.userName, account.password)
         cur.execute(query,values) 
         accountInfo = cur.fetchone()
-        # accountInfo[0] = userType , accountInfo[1] = accountId
-        if(accountInfo == None):
-            print("No such user")
-            return "No such user", None
         
-        else:
-            if(accountInfo[0] == True):
-                return "Employee", accountInfo[1]
-            else:
-                return "Employer", accountInfo[1]
+        userType,accountId = accountInfo
+        if(userType == "No such user"):
+            return userType,None
+        return userType,accountId
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
