@@ -137,16 +137,11 @@ def loginCheck(account):
     try:
         print(account.userName) 
         print(account.password)
-        query = "SELECT loginCheck(%s,%s)"
+        query = "SELECT userType,accountid FROM account where username = %s and pass = %s"
         values = (account.userName, account.password)
         cur.execute(query,values) 
-        accountInfo = cur.fetchone() 
-        print(accountInfo[0][0])
-        print("------")
-        print(accountInfo[0][1])
-        if(accountInfo == None):
-            return "No such user", None
-        return accountInfo[0][0],accountInfo[0][1]
+        accountInfo = cur.fetchone()
+        # accountInfo[0] = userType , accountInfo[1] = accountId
         if(accountInfo == None):
             print("No such user")
             return "No such user", None
