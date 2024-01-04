@@ -137,3 +137,31 @@ select * from accountIdGenerator
 insert into appliedApplications values(1,4,'waiting','shshsh','2020-10-12')
 update appliedApplications set status = 'approved' where employeeId = 1 and applicationId = 4
 
+
+create  type loginCheckType as (userType varchar, accountidd int);
+
+CREATE OR REPLACE FUNCTION loginCheck(funcUsername varchar, funcPassword varchar)
+RETURNS loginCheckType as $$
+
+DECLARE 
+loginInfo loginCheckType;
+
+
+counter int :=0;
+accountCheck cursor for select username,pass,userType,accountid from account ;
+begin
+    loginInfo.userType:='No such user';
+    FOR account_row in accountCheck LOOP
+    if(account_row.username=funcUsername and account_row.pass=funcPassword) THEN
+        loginInfo.accountidd=account_row.accountid ;
+        IF(account_row.userType = true) then
+            loginInfo.userType='Employee';
+        ELSE 
+            loginInfo.userType='Employer';
+        END IF ;
+    END IF;
+    END LOOP;
+    return loginInfo;
+END;
+$$ LANGUAGE plpgsql;
+        
