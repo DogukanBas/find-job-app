@@ -373,6 +373,8 @@ def showPage(tab2,employeeId):
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
     
+    ttk.Label(scrollable_frame,text="My Applications",font="Times 30").grid(row=11,column=1,padx=5,pady=5)
+    
     
     applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description','Apply Date','Status')
     applicationListView = ttk.Treeview(scrollable_frame, columns=applicationColumns, show='headings')
@@ -392,10 +394,10 @@ def showPage(tab2,employeeId):
         print(status)
         #messagebox.showinfo("Applications", status)
         
-    applicationListView.grid(row=11,padx=5,pady=5,columnspan=3)
+    applicationListView.grid(row=12,padx=5,pady=5,columnspan=3)
     
     scrollbarApplications = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=applicationListView.yview)
     applicationListView.configure(yscrollcommand=scrollbarApplications.set)
-    scrollbarApplications.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
+    scrollbarApplications.grid(row=12,column=3, sticky='ns',padx=5,pady=5)
 
     
