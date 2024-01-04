@@ -374,23 +374,28 @@ def showPage(tab2,employeeId):
     scrollbar.pack(side="right", fill="y")
     
     
-    # applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description','Apply Date','Status')
-    # applicationListView = ttk.Treeview(scrollable_frame, columns=applicationColumns, show='headings')
+    applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description','Apply Date','Status')
+    applicationListView = ttk.Treeview(scrollable_frame, columns=applicationColumns, show='headings')
 
-    # # set column headings
-    # for col in applicationColumns:
-    #     applicationListView.column(col,minwidth=10,width=100)
-    #     applicationListView.heading(col, text=col)
+    # set column headings
+    for col in applicationColumns:
+        applicationListView.column(col,minwidth=10,width=100)
+        applicationListView.heading(col, text=col)
 
-    # applicationList = Service.showAllApplications(employeeId)
-    # print(applicationList)
-    # for app in applicationList: 
-    #     applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
+    status, applicationList = Service.getApplicationView(employeeId)
+    if status == True:
+        print("Applications retrieved")
+        print(applicationList)
+        for app in applicationList: 
+            applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName,app.companyName,app.applicationDate, app.counter, app.contractType,app.positionName,app.description,app.appliedApplicationDate,app.status))
+    else:   
+        print(status)
+        #messagebox.showinfo("Applications", status)
         
-    # applicationListView.grid(row=11,padx=5,pady=5,columnspan=3)
+    applicationListView.grid(row=11,padx=5,pady=5,columnspan=3)
     
-    # scrollbarApplications = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=applicationListView.yview)
-    # applicationListView.configure(yscrollcommand=scrollbarApplications.set)
-    # scrollbarApplications.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
+    scrollbarApplications = ttk.Scrollbar(scrollable_frame, orient=tk.VERTICAL, command=applicationListView.yview)
+    applicationListView.configure(yscrollcommand=scrollbarApplications.set)
+    scrollbarApplications.grid(row=11,column=3, sticky='ns',padx=5,pady=5)
 
     

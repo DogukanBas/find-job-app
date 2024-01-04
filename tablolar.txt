@@ -51,29 +51,46 @@ create table applications(
 create table appliedApplications(
 	employeeId int references employee(employeeId),
 	applicationId int references applications(applicationId),
-	status varchar CHECK (status In ('waiting','rejected','inprocess','approved','canceled')),
+	status varchar CHECK (status In ('waiting','rejected','approved','canceled')),
 	coverLetter varchar,
 	applicationDate date
 );
 
 CREATE VIEW applicationView AS
 SELECT
+	aa.employeeId,
     app.applicationId,
-    app.employerId,
+    employer.employerName,
     app.counter,
     app.applicationName,
     app.applicationDate,
     app.contractType,
     app.positionName,
     app.description,
-    aa.employeeId,
     aa.status,
     aa.coverLetter,
     aa.applicationDate AS appliedApplicationDate
 FROM
     applications app
 JOIN
-    appliedApplications aa ON app.applicationId = aa.applicationId;
+    appliedApplications aa ON app.applicationId = aa.applicationId
+join employer on employer.employerId = app.employerId;
+
+CREATE VIEW applicantsView AS
+SELECT
+	aa.employeeId,
+	aa.applicationId,
+	aa.status,
+	aa.coverLetter,
+	aa.applicationDate,
+	emp.employeeName,
+	emp.employeeSurname,
+	emp.employeePhone,
+	emp.employeeAddress
+FROM
+    employee emp
+JOIN
+    appliedApplications aa ON emp.employeeId = aa.employeeId;
 
 
 	
