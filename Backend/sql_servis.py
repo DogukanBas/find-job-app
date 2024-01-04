@@ -564,7 +564,7 @@ def filterApplications(employeeId,filter):
         
         if(filter.applicationName != None):
             query += " intersect "
-            query += "Select * from applications where applicationName like '%" + filter.applicationName + "%'"
+            query += "Select * from applications where UPPER(applicationName) like UPPER('%" + filter.applicationName + "%')"
 
         if(filter.companyName != None):
             query += " intersect "
@@ -572,11 +572,11 @@ def filterApplications(employeeId,filter):
         
         if(filter.positionName != None):
             query += " intersect "
-            query += "Select * from applications where positionName like '%" + filter.positionName + "%'"
+            query += "Select * from applications where UPPER(positionName) like UPPER('%" + filter.positionName + "%')"
         
         if(filter.contractType != None):
             query += " intersect "
-            query += "Select * from applications where contractType like '%" + filter.contractType + "%'"
+            query += "Select * from applications where UPPER(contractType) like UPPER('%" + filter.contractType + "%')"
         
 
         cur.execute(query)
@@ -649,6 +649,3 @@ def getApplicantsView(applicationId):
         print(error)
         conn.rollback()
         return False,error
-
-
-
