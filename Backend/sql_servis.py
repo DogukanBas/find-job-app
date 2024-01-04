@@ -530,7 +530,7 @@ def showAllApplications(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ") "
+        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         cur.execute(query) 
         applications = cur.fetchall()
         print(applications)
@@ -642,7 +642,7 @@ def getApplicantsView(applicationId):
         applicants = cur.fetchall()
         applicantList = []
         for app in applicants:
-            newApplicant = Entities.ApplicantView(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
+            newApplicant = Entities.ApplicantsView(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             applicantList.append(newApplicant)
         return True,applicantList
     except(Exception, psycopg2.DatabaseError) as error:
