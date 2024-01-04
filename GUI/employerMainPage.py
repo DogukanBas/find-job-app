@@ -191,7 +191,42 @@ def showPage(employerId):
         selectedApplication = applicationListView.selection()[0]
         applicationValues = applicationListView.item(selectedApplication)['values']
         applicationId = applicationValues[0]
-        pass
+        
+        status , applicantsList = Service.getApplicantsView(applicationId)
+        if status == True:
+            print("Applicants retrieved")
+            print(applicantsList)
+        else:
+            print(status)
+            #messagebox.showinfo("Applicants", status) 
+            return
+        
+        applicantsTop = tk.Toplevel()
+        applicantsTop.title('Applicants')
+        applicantsTop.resizable(False,False)
+            
+        applicantsColumns = ('Application Id','Employee Id','Employee Name', 'Employee Surname','Employee Phone','Employee Address', 'Apply Date','Status')
+        applicantsListView = ttk.Treeview(applicantsTop, columns=applicantsColumns, show='headings')
+
+        # set column headings
+        for col in applicantsColumns:
+            applicantsListView.column(col,minwidth=10,width=100)
+            applicantsListView.heading(col, text=col)
+
+        if status == True:
+            print("Applicants retrieved")
+            print(applicantsList)
+            for app in applicantsList: 
+                applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
+        else:   
+            print(status)
+            #messagebox.showinfo("Applications", status)
+            
+        applicantsListView.grid(row=0,padx=5,pady=5,columnspan=3)
+        
+        scrollbarApplicants = ttk.Scrollbar(applicantsTop, orient=tk.VERTICAL, command=applicantsListView.yview)
+        applicantsListView.configure(yscrollcommand=scrollbarApplicants.set)
+        scrollbarApplicants.grid(row=0,column=3, sticky='ns',padx=5,pady=5)   
     
         
     
@@ -201,7 +236,7 @@ def showPage(employerId):
     updateApplicationButton.grid(row=7,column=1,padx=5,pady=5)
     deleteApplicationButton = tk.Button(root,text='Delete',command=deleteApplicationTopLevel)
     deleteApplicationButton.grid(row=7,column=2,padx=5,pady=5)
-    showApplicantsButton = tk.Button(root,text='Show Applicants')
+    showApplicantsButton = tk.Button(root,text='Show Applicants',command=showApplicantsTopLevel)
     showApplicantsButton.grid(row=8,column=1,padx=5,pady=5)
 
     
