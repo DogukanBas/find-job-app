@@ -636,7 +636,7 @@ def getApplicantsView(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM applicantsView where applicationId = %s"
+        query = "SELECT * FROM applicantsView where applicationId = %s and status = 'waiting'"
         values = (applicationId,)
         cur.execute(query,values) 
         applicants = cur.fetchall()
@@ -649,3 +649,23 @@ def getApplicantsView(applicationId):
         print(error)
         conn.rollback()
         return False,error
+
+def evaluate(applicationId,employeeId,status):
+    if(status):
+        status = "approved"
+    else:
+        status = "rejected"
+    
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        insertQuery = "UPDATE appliedapplications SET status = %s WHERE applicationId = %s and employeeId = %s"
+        values = (status,applicationId,employeeId)
+        cur.execute(insertQuery,values)
+        conn.commit()
+        return True
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return error
+
