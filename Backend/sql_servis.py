@@ -530,7 +530,7 @@ def showAllApplications(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
+        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ") "
         cur.execute(query) 
         applications = cur.fetchall()
         print(applications)
@@ -632,12 +632,12 @@ def getApplicationView(employeeId) :
         return False,error
 
 
-def getApplicantsView(employerId, applicationId):
+def getApplicantsView(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM applicantsView where employerId = %s and applicationId = %s"
-        values = (employerId,applicationId)
+        query = "SELECT * FROM applicantsView where applicationId = %s"
+        values = (applicationId,)
         cur.execute(query,values) 
         applicants = cur.fetchall()
         applicantList = []
@@ -649,4 +649,6 @@ def getApplicantsView(employerId, applicationId):
         print(error)
         conn.rollback()
         return False,error
-       
+
+
+
