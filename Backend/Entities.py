@@ -144,3 +144,31 @@ class Filter:
             self.positionName = None
         if(self.contractType == "No Filter"):
             self.contractType = None
+
+
+    
+
+
+class ApplicationView :
+    def __init__(self,employeeId,applicationId,companyName,counter,applicationName,applicationDate,contractType,positionName,description,status,coverLetter,appliedApplicationDate):
+        self.employeeId = employeeId
+        self.applicationId = applicationId
+        self.companyName = companyName
+        self.counter = counter
+        self.applicationName = applicationName
+        self.applicationDate = applicationDate
+        self.contractType = contractType
+        self.positionName = positionName
+        self.description = description
+        self.status = status
+        self.coverLetter = coverLetter
+        self.appliedApplicationDate = appliedApplicationDate
+
+        if(self.description == ""):
+            self.description = None
+        
+        if(self.coverLetter == ""):
+            self.coverLetter = None
+
+        
+ 

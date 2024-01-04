@@ -611,3 +611,24 @@ def applyApplication(appliedApplication):
         print(error)
         conn.rollback()
         return error
+
+
+def getApplicationView(employeeId) :
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM applicationView where employeeId = %s"
+        values = (employeeId,)
+        cur.execute(query,values) 
+        applications = cur.fetchall()
+        applicationList = []
+        for app in applications:
+            newApplication = Entities.ApplicationView(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8],app[9],app[10],app[11])
+            applicationList.append(newApplication)
+        return True,applicationList
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return False,error
+
+
