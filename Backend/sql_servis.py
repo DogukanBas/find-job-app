@@ -433,13 +433,13 @@ def getApplications(employerId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM applications where employerId = %s"
+        query = "SELECT * FROM applications where employerId = %s and isActive = true"
         values = (employerId,)
         cur.execute(query,values) 
         applications = cur.fetchall()
         applicationList = []
         for app in applications:
-            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             applicationList.append(newApplication)
         return applicationList
     except(Exception, psycopg2.DatabaseError) as error:
@@ -451,11 +451,11 @@ def getApplication(applicationId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query = "SELECT * FROM applications where applicationId = %s"
+        query = "SELECT * FROM applications where applicationId = %s and isActive = true"
         values = (applicationId,)
         cur.execute(query,values) 
         application = cur.fetchone()
-        newApplication = Entities.Application(application[0],application[1],application[2],application[3],application[4],application[5],application[6],application[7])
+        newApplication = Entities.Application(application[0],application[1],application[2],application[3],application[4],application[5],application[6],application[7],application[8])
         return newApplication
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -472,14 +472,14 @@ def addApplication(application):
     applicationId= cur.fetchone()[0]
 
     try:
-        insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        insertQuery = "INSERT INTO applications (applicationId, applicationName, applicationDate, contractType, positionName, description, employerId, counter,isactive) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)"
      
         applicationDate= datetime.now().strftime("%Y-%m-%d")
-        values = (applicationId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0)
+        values = (applicationId,application.applicationName, applicationDate, application.contractType, application.positionName, application.description, application.employerId, 0,True)
         
         cur.execute(insertQuery,values)
         conn.commit()
-        return True, Entities.Application(application.employerId,applicationId,0,application.applicationName,applicationDate,application.contractType,application.positionName,application.description)
+        return True, Entities.Application(application.employerId,applicationId,0,application.applicationName,applicationDate,application.contractType,application.positionName,application.description,application.isActive)
     
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -487,13 +487,13 @@ def addApplication(application):
         return error
     
 
-
+#sql fonksiyonuna çevrilecek -------------------->
 def deleteApplication(application):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     applicationId= application.applicationId
     try:
-        insertQuery = "DELETE FROM applications WHERE applicationId = %s"
+        insertQuery = "select * from deleteapplication(%s)"
         values = (applicationId,)
         cur.execute(insertQuery,values)
         conn.commit()
@@ -523,13 +523,13 @@ def showAllApplications(employeeId):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
+        query="Select * from applications where isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         cur.execute(query) 
         applications = cur.fetchall()
         print(applications)
         applicationList = []
         for app in applications:
-            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             query="SELECT employername FROM employer where employerId = %s"
             values=(app[0],)
 
@@ -548,7 +548,7 @@ def filterApplications(employeeId,filter):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        query="Select * from applications where  applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
+        query="Select * from applications where  isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         if(filter.applicationDate != None):
             if(filter.applicationDate == "Ascending"):
                 query += " order by applicationDate asc"
@@ -576,7 +576,7 @@ def filterApplications(employeeId,filter):
         applications = cur.fetchall()
         applicationList = []
         for app in applications:
-            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7])
+            newApplication = Entities.Application(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
             query="SELECT employername FROM employer where employerId = %s"
             values=(app[0],)
             cur.execute(query,values)
