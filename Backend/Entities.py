@@ -172,3 +172,25 @@ class ApplicationView :
 
         
  
+class ApplicantsView:
+    def __init__(self,employeeId,applicationId,status,coverLetter,applicationDate,employeeName,employeeSurname,employeePhone,employeeAddress):
+        self.employeeId = employeeId
+        self.applicationId = applicationId
+        self.status = status
+        self.coverLetter = coverLetter
+        self.applicationDate = applicationDate
+        self.employeeName = employeeName
+        self.employeeSurname = employeeSurname
+        self.employeePhone = employeePhone
+        self.employeeAddress = employeeAddress
+
+        if(self.coverLetter == ""):
+            self.coverLetter = None
+        if(self.employeeName == ""):
+            self.employeeName = None
+        if(self.employeeSurname == ""):
+            self.employeeSurname = None
+        if(self.employeePhone == ""):
+            self.employeePhone = None
+        if(self.employeeAddress == ""):
+            self.employeeAddress = None

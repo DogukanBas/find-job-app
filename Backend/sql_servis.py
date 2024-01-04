@@ -632,3 +632,21 @@ def getApplicationView(employeeId) :
         return False,error
 
 
+def getApplicantsView(employerId, applicationId):
+    conn = Helper.DataBaseConnector.singleton.connection
+    cur = Helper.DataBaseConnector.singleton.cursor
+    try:
+        query = "SELECT * FROM applicantsView where employerId = %s and applicationId = %s"
+        values = (employerId,applicationId)
+        cur.execute(query,values) 
+        applicants = cur.fetchall()
+        applicantList = []
+        for app in applicants:
+            newApplicant = Entities.ApplicantView(app[0],app[1],app[2],app[3],app[4],app[5],app[6],app[7],app[8])
+            applicantList.append(newApplicant)
+        return True,applicantList
+    except(Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        conn.rollback()
+        return False,error
+       
