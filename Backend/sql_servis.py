@@ -155,7 +155,7 @@ def checkExistanceEducation(education):
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
-        query = "SELECT * FROM checkExistanceEducation(%s,%s,%s,%s,%s)"
+        query = "SELECT checkExistanceEducation(%s,%s,%s,%s,%s)"
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
         cur.execute(query,values) 
         education = cur.fetchone()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
@@ -268,15 +268,11 @@ def checkExistanceExperience(experience):
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
-        query = "SELECT * FROM checkExistanceExperience(%s,%s,%s,%s,%s)"
+        query = "SELECT checkExistanceExperience(%s,%s,%s,%s,%s)"
         values = (experience.employeeId, experience.startDate, experience.endDate, experience.positionName,experience.companyName)
         cur.execute(query,values) 
         experience = cur.fetchone()
-        
-        if(experience == None):
-            return False
-        else:
-            return experience
+        return experience
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -489,7 +485,7 @@ def deleteApplication(application):
     cur = Helper.DataBaseConnector.singleton.cursor
     applicationId= application.applicationId
     try:
-        insertQuery = "select * from deleteapplication(%s)"
+        insertQuery = "select deleteapplication(%s)"
         values = (applicationId,)
         cur.execute(insertQuery,values)
         conn.commit()
