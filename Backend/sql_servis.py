@@ -77,9 +77,13 @@ def registerEmployee(employee,account):
         return "Username and password cannot be empty."   
     
     except(Exception, psycopg2.DatabaseError) as error:
+        # if error occurs becauese of phone number it includes check_phone_number function
         print(error)
+        isPassError = str(error).find("check_pass_length")
         print("Transaction")
         conn.rollback()
+        if(isPassError != -1):
+            return ("Password must be between 6 and 12 characters.")
         return ("Unvalid Phone Number. Please try again.")
     
     return True
