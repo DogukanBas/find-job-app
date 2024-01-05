@@ -173,4 +173,36 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-        
+CREATE OR REPLACE FUNCTION checkExistanceEducation(employeeId int,schoolname varchar,startdate date,enddate date,schooltype varchar)
+returns bool as $$
+DECLARE 
+isExist bool;
+exist_cursor CURSOR FOR SELECT * from employee_education;
+BEGIN 
+	isExist := false;
+	FOR row_cursor in exist_cursor LOOP
+		IF(employeeId = row_cursor.employeeId and schoolname = row_cursor.employeeId and startdate = row_cursor.startdate and enddate = row_cursor.enddate and schooltype = row_cursor.schooltype) THEN
+			isExist := true;
+		END IF;	
+	END LOOP;
+	RETURN isExist;
+END;
+$$ LANGUAGE 'plpgsql';
+	
+
+
+CREATE OR REPLACE FUNCTION checkExistanceExperience(employeeId int, startdate date, enddate date, positionname varchar, companyname varchar)
+returns bool as $$
+DECLARE 
+isExist bool;
+exist_cursor CURSOR FOR SELECT * from employee_experience;
+BEGIN 
+	isExist := false;
+	FOR row_cursor in exist_cursor LOOP
+		IF(employeeId = row_cursor.employeeId  and startdate = row_cursor.startdate and enddate = row_cursor.enddate and positionname = row_cursor.positionname and row_cursor.companyname = companyname) THEN
+			isExist := true;
+		END IF;	
+	END LOOP;
+	RETURN isExist;
+END;
+$$ LANGUAGE 'plpgsql';
