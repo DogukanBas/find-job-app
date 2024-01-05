@@ -155,15 +155,11 @@ def checkExistanceEducation(education):
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
-        query = "SELECT * FROM employee_education where employeeid = %s and schoolname = %s and startdate = %s and enddate = %s and schooltype = %s"
+        query = "SELECT * FROM checkExistanceEducation(%s,%s,%s,%s,%s)"
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
         cur.execute(query,values) 
         education = cur.fetchone()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-        print(education)
-        if(education == None):
-            return False
-        else:
-            return True
+        return education
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -272,8 +268,8 @@ def checkExistanceExperience(experience):
     cur = Helper.DataBaseConnector.singleton.cursor
     
     try:
-        query = "SELECT * FROM employee_experience where employeeid = %s and companyname = %s and startdate = %s and enddate = %s and positionName = %s"
-        values = (experience.employeeId, experience.companyName, experience.startDate, experience.endDate, experience.positionName)
+        query = "SELECT * FROM checkExistanceExperience(%s,%s,%s,%s,%s)"
+        values = (experience.employeeId, experience.startDate, experience.endDate, experience.positionName,experience.companyName)
         cur.execute(query,values) 
         experience = cur.fetchone()
         
