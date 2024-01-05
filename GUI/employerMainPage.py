@@ -58,6 +58,7 @@ def showPage(employerId):
 
     # set column headings
     for col in applicationColumns:
+        applicationListView.column(col,minwidth=10,width=150)
         applicationListView.heading(col, text=col)
 
     applicationList = Service.getApplications(employerId)

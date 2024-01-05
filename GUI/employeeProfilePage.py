@@ -8,6 +8,18 @@ from tkcalendar import Calendar
 from datetime import datetime
 from tkinter import Scrollbar
 
+def reloadApplicationsListView(employeeId):
+    status, applicationList = Service.getApplicationView(employeeId)
+    if status == True:
+        applicationListView.delete(*applicationListView.get_children())
+        print("Applications retrieved")
+        print(applicationList)
+        for app in applicationList: 
+            applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName,app.companyName,app.applicationDate, app.counter, app.contractType,app.positionName,app.description,app.appliedApplicationDate,app.status))
+    else:   
+        print(status)
+        #messagebox.showinfo("Applications", status)
+
 
 def showPage(tab2,employeeId):
     canvas = tk.Canvas(tab2)
@@ -18,7 +30,7 @@ def showPage(tab2,employeeId):
     lambda e: canvas.configure(
         scrollregion=canvas.bbox("all")
     )
-) 
+    ) 
 
     canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
     canvas.configure(yscrollcommand=scrollbar.set)
@@ -377,6 +389,7 @@ def showPage(tab2,employeeId):
     
     
     applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description','Apply Date','Status')
+    global applicationListView 
     applicationListView = ttk.Treeview(scrollable_frame, columns=applicationColumns, show='headings')
 
     # set column headings

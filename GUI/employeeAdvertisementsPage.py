@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Backend import sql_servis as Service
 from Backend import Entities
+from GUI import employeeProfilePage
 
 def showPage(tab1,employeeId):
     
@@ -30,7 +31,8 @@ def showPage(tab1,employeeId):
     
     def filter():
         filter = Entities.Filter(dateComboBox.get(),applicationNameEntry.get(),companyNameEntry.get(),positionNameEntry.get(),contractTypeComboBox.get())
-        status, filteredApplications = Service.filterApplications(employeeId,filter)
+        status, filteredApplications,count = Service.filterApplications(employeeId,filter)
+        ttk.Label(tab1,text=f'{count} ilan listeleniyor',font="Times 15").grid(row=2,column=0,padx=5,pady=5)
         if status == True:
             print("Applications filtered")
             applicationListView.delete(*applicationListView.get_children())
@@ -43,8 +45,7 @@ def showPage(tab1,employeeId):
     filterButton = tk.Button(tab1,text='Filter',command=filter)
     filterButton.grid(row=2,column=2,padx=5,pady=5)
     
-    ttk.Label(tab1,text='10 ilan listeleniyor',font="Times 15").grid(row=2,column=0,padx=5,pady=5)
-    
+
     applicationColumns = ('Application Id','Application Name','Company Name', 'Application Date','Counter','Contract Type', 'Position Name','Description')
     applicationListView = ttk.Treeview(tab1, columns=applicationColumns, show='headings')
 
@@ -53,7 +54,8 @@ def showPage(tab1,employeeId):
         applicationListView.column(col,minwidth=10,width=126)
         applicationListView.heading(col, text=col)
 
-    applicationList = Service.showAllApplications(employeeId)
+    applicationList, count = Service.showAllApplications(employeeId)
+    ttk.Label(tab1,text=f'{count} ilan listeleniyor',font="Times 15").grid(row=2,column=0,padx=5,pady=5)
     print(applicationList)
     for app in applicationList: 
         applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
@@ -85,6 +87,7 @@ def showPage(tab1,employeeId):
                 status = Service.applyApplication(appliedApplication)
                 if(status == True):
                     print("Application successful")
+                    employeeProfilePage.reloadApplicationsListView(employeeId)
                     applicationListView.delete(applicationListView.selection()[0])
                     coverLetterTopLevel.destroy()
                     #messagebox.showinfo("Apply", "Application successful")
