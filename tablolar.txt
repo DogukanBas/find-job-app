@@ -2,7 +2,8 @@ create table account(
 	accountId int primary key,
 	username varchar unique not null,
 	pass varchar not null,
-	userType bool not null
+	userType bool not null,
+	CONSTRAINT check_pass_length CHECK (LENGTH(pass) > 5 and LENGTH(pass) < 13)
 );
 
 create table employer(
