@@ -597,7 +597,7 @@ def applyApplication(appliedApplication):
         values = (appliedApplication.employeeId,)
         cur.execute(controlQuery,values)
         count = cur.fetchone()[0]
-        if(count == 3):
+        if(count != None):
             return "You have reached the maximum number of waiting applications."
         
         insertQuery = "INSERT INTO appliedapplications (employeeId, applicationId, status, applicationDate,coverLetter) VALUES (%s, %s, %s, %s, %s)"
