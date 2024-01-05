@@ -159,7 +159,7 @@ def checkExistanceEducation(education):
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
         cur.execute(query,values) 
         education = cur.fetchone()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-        return education
+        return education[0]
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -272,7 +272,7 @@ def checkExistanceExperience(experience):
         values = (experience.employeeId, experience.startDate, experience.endDate, experience.positionName,experience.companyName)
         cur.execute(query,values) 
         experience = cur.fetchone()
-        return experience
+        return experience[0]
                 
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
