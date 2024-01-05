@@ -17,7 +17,7 @@ def showPage(employerId):
         print(employer.employerName)
     else:
         print(status)
-        #messagebox.showinfo("Employer Info", status)
+        messagebox.showinfo("Employer Info", status)
         return
     
     tk.Label(root, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
@@ -43,10 +43,10 @@ def showPage(employerId):
         status = Service.updateEmployerInfo(newEmployer)
         if status == True:
             print("Employer info updated")
-            #messagebox.showinfo("Employer Info", "Employer info updated")
+            messagebox.showinfo("Employer Info", "Employer info updated")
         else:
             print(status)
-            #messagebox.showinfo("Employer Info", status)
+            messagebox.showinfo("Employer Info", status)
     
     saveButton = tk.Button(root,text='Save',command=updateInfos)
     saveButton.grid(row=3,column=1,padx=5,pady=5)
@@ -105,12 +105,12 @@ def showPage(employerId):
             status, app = Service.addApplication(newApplication)
             if status == True:
                 print("Application added")
-                #messagebox.showinfo("Add Application", "Application added")
+                messagebox.showinfo("Add Application", "Application added")
                 applicationListView.insert('','end',values=(app.applicationId,app.applicationName,app.applicationDate,app.counter,app.contractType,app.positionName,app.description))
                 addApplicationTop.destroy()
             else:
                 print(status)
-                #messagebox.showinfo("Add Application", status)
+                messagebox.showinfo("Add Application", status)
                 
         submitButton = tk.Button(addApplicationTop,text='Submit',command=submitApplication)
         submitButton.grid(row=4,column=1,padx=5,pady=5)
@@ -140,12 +140,12 @@ def showPage(employerId):
             status = Service.updateApplication(app)
             if status == True:
                 print("Application updated")
-                #messagebox.showinfo("Application Update", "Application updated")
+                messagebox.showinfo("Application Update", "Application updated")
                 applicationListView.item(selectedApplication,values=(app.applicationId,app.applicationName,app.applicationDate,app.counter,app.contractType,app.positionName,app.description))
                 updateApplicationTop.destroy()
             else:
                 print(status)
-                #messagebox.showinfo("Application Update", status)
+                messagebox.showinfo("Application Update", status)
         
         applicationNameLabel = tk.Label(updateApplicationTop,text='Application Name: ')
         applicationNameLabel.grid(row=0,column=0,padx=5,pady=5)
@@ -178,11 +178,11 @@ def showPage(employerId):
         status = Service.deleteApplication(application)
         if status == True:
             print("Application deleted")
-            #messagebox.showinfo("Application Delete", "Application deleted")
+            messagebox.showinfo("Application Delete", "Application deleted")
             applicationListView.delete(selectedApplication)
         else:
             print(status)
-            #messagebox.showinfo("Application Delete", status)
+            messagebox.showinfo("Application Delete", status)
     
     def showApplicantsTopLevel():
         selectedApplication = applicationListView.selection()[0]
@@ -195,7 +195,7 @@ def showPage(employerId):
             print(applicantsList)
         else:
             print(status)
-            #messagebox.showinfo("Applicants", status) 
+            messagebox.showinfo("Applicants", status) 
             return
         
         applicantsTop = tk.Toplevel()
@@ -217,7 +217,7 @@ def showPage(employerId):
                 applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
         else:   
             print(status)
-            #messagebox.showinfo("Applications", status)
+            messagebox.showinfo("Applications", status)
             
         applicantsListView.grid(row=0,padx=5,pady=5,columnspan=3)
         
@@ -305,35 +305,35 @@ def showPage(employerId):
                 status = Service.evaluate(applicationId,employeeId,True)
                 if status == True:
                     print("Application approved")
-                    #messagebox.showinfo("Application Approve", "Application approved")
+                    messagebox.showinfo("Application Approve", "Application approved")
                     applicantsListView.delete(*applicantsListView.get_children())
                     status , applicantsList = Service.getApplicantsView(applicationId)
                     if status != True:
-                        #messagebox.showinfo("Error while reloading table", "Error while reloading table")
+                        messagebox.showinfo("Error while reloading table", "Error while reloading table")
                         return
                     for app in applicantsList: 
                         applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
                     detailsTop.destroy()
                 else:
                     print(status)
-                    #messagebox.showinfo("Application Approve", status)
+                    messagebox.showinfo("Application Approve", status)
             
             def rejectApplication():
                 status = Service.evaluate(applicationId,employeeId,False)
                 if status == True:
                     print("Application rejected")
-                    #messagebox.showinfo("Application Reject", "Application rejected")
+                    messagebox.showinfo("Application Reject", "Application rejected")
                     applicantsListView.delete(*applicantsListView.get_children())
                     status , applicantsList = Service.getApplicantsView(applicationId)
                     if status != True:
-                        #messagebox.showinfo("Error while reloading table", "Error while reloading table")
+                        messagebox.showinfo("Error while reloading table", "Error while reloading table")
                         return
                     for app in applicantsList: 
                         applicantsListView.insert('', 'end', text="1", values=(app.applicationId , app.employeeId,app.employeeName,app.employeeSurname, app.employeePhone, app.employeeAddress,app.applicationDate,app.status))
                     detailsTop.destroy()
                 else:
                     print(status)
-                    #messagebox.showinfo("Application Reject", status)
+                    messagebox.showinfo("Application Reject", status)
             
             approveButton = tk.Button(scrollable_frame,text='Approve',command=approveApplication)
             approveButton.grid(row=6,column=0,padx=5,pady=5)
