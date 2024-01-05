@@ -568,7 +568,7 @@ def filterApplications(employeeId,filter):
 
         if(filter.companyName != None):
             query += " intersect "
-            query += "Select * from applications where employerId in (Select employerId from employer where employerName like '%" + filter.companyName + "%')"
+            query += "Select * from applications where employerId in (Select employerId from employer where UPPER(employerName) like UPPER('%" + filter.companyName + "%'))"
         
         if(filter.positionName != None):
             query += " intersect "
