@@ -593,11 +593,11 @@ def applyApplication(appliedApplication):
     conn = Helper.DataBaseConnector.singleton.connection
     cur = Helper.DataBaseConnector.singleton.cursor
     try:
-        controlQuery = "select count(*) from appliedapplications where status = 'waiting' and employeeid=%s having count(*) = 5"
+        controlQuery = "select count(*) from appliedapplications where status = 'waiting' and employeeid=%s having count(*) = 3"
         values = (appliedApplication.employeeId,)
         cur.execute(controlQuery,values)
         count = cur.fetchone()[0]
-        if(count == 5):
+        if(count == 3):
             return "You have reached the maximum number of waiting applications."
         
         insertQuery = "INSERT INTO appliedapplications (employeeId, applicationId, status, applicationDate,coverLetter) VALUES (%s, %s, %s, %s, %s)"
