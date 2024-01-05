@@ -182,7 +182,7 @@ exist_cursor CURSOR FOR SELECT * from employee_education;
 BEGIN 
 	isExist := false;
 	FOR row_cursor in exist_cursor LOOP
-		IF(employeeId = row_cursor.employeeId and schoolname = row_cursor.employeeId and startdate = row_cursor.startdate and enddate = row_cursor.enddate and schooltype = row_cursor.schooltype) THEN
+		IF(employeeId = row_cursor.employeeId and schoolname = row_cursor.schoolname and startdate = row_cursor.startdate and enddate = row_cursor.enddate and schooltype = row_cursor.schooltype) THEN
 			isExist := true;
 		END IF;	
 	END LOOP;

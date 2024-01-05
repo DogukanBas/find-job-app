@@ -164,7 +164,8 @@ def checkExistanceEducation(education):
     try:
         query = "SELECT checkExistanceEducation(%s,%s,%s,%s,%s)"
         values = (education.employeeId, education.schoolName, education.startDate, education.endDate, education.schoolType)
-        cur.execute(query,values) 
+        cur.execute(query,values)
+        print(education)
         education = cur.fetchone()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
         return education[0]
                 
@@ -277,8 +278,9 @@ def checkExistanceExperience(experience):
     try:
         query = "SELECT checkExistanceExperience(%s,%s,%s,%s,%s)"
         values = (experience.employeeId, experience.startDate, experience.endDate, experience.positionName,experience.companyName)
-        cur.execute(query,values) 
+        cur.execute(query,values)
         experience = cur.fetchone()
+        print(experience)
         return experience[0]
                 
     except(Exception, psycopg2.DatabaseError) as error:
@@ -312,6 +314,8 @@ def addExperience(experience):
         return error
     
 def updateExperience(oldExperience,newExperience):
+    if(oldExperience.companyName == newExperience.companyName and stringToDate(oldExperience.startDate).date() == stringToDate(newExperience.startDate) and stringToDate(oldExperience.endDate).date() == stringToDate(newExperience.endDate) and oldExperience.positionName == newExperience.positionName):
+        return True
     if(newExperience.companyName == None or newExperience.startDate == None or newExperience.positionName == None):
         return "Company name, start date and position cannot be empty."
     
