@@ -18,7 +18,7 @@ def reloadApplicationsListView(employeeId):
             applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName,app.companyName,app.applicationDate, app.counter, app.contractType,app.positionName,app.description,app.appliedApplicationDate,app.status))
     else:   
         print(status)
-        #messagebox.showinfo("Applications", status)
+        messagebox.showinfo("Applications", status)
 
 
 def showPage(tab2,employeeId):
@@ -43,7 +43,7 @@ def showPage(tab2,employeeId):
         print(employee.employeeName)
     else:
         print(status)
-        #messagebox.showinfo("Employee Info", status)
+        messagebox.showinfo("Employee Info", status)
         return
     
     ttk.Label(scrollable_frame, text ="Name:").grid(column = 0,  row = 0, padx = 5, pady = 5) 
@@ -76,10 +76,10 @@ def showPage(tab2,employeeId):
         status = Service.updateEmployeeInfo(newEmployee)
         if status == True:
             print("Employee info updated")
-            #messagebox.showinfo("Employee Info", "Employee info updated")
+            messagebox.showinfo("Employee Info", "Employee info updated")
         else:
             print(status)
-            #messagebox.showinfo("Employee Info", status)
+            messagebox.showinfo("Employee Info", status)
     
     saveButton = ttk.Button(scrollable_frame,text='Save',command=updateInfos)
     saveButton.grid(row=4,column=1,padx=5,pady=5)
@@ -147,12 +147,12 @@ def showPage(tab2,employeeId):
             status = Service.addEducation(newEducation)
             if(status == True):
                 print("School added")
-                #messagebox.showinfo("School Add", "School added")
+                messagebox.showinfo("School Add", "School added")
                 schoolList.insert('','end',values=(schoolNameEntry.get(),comboText.get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
                 addSchoolTop.destroy()
             else: 
                 print(status)
-                #messagebox.showinfo("School Add", status)
+                messagebox.showinfo("School Add", status)
                 
             
         submitButton = tk.Button(addSchoolTop,text='Submit',command=submitSchool)
@@ -165,11 +165,11 @@ def showPage(tab2,employeeId):
         status = Service.deleteEducation(education)
         if status == True:
             print("School deleted")
-            #messagebox.showinfo("School Delete", "School deleted")
+            messagebox.showinfo("School Delete", "School deleted")
             schoolList.delete(selectedSchool)
         else:
             print(status)
-            #messagebox.showinfo("School Delete", status)
+            messagebox.showinfo("School Delete", status)
     
     def updateSchoolTopLevel():
         selectedSchool = schoolList.selection()[0]
@@ -194,12 +194,12 @@ def showPage(tab2,employeeId):
             status = Service.updateEducation(oldEducation,neweducation)
             if status == True:
                 print("School updated")
-                #messagebox.showinfo("School Update", "School updated")
+                messagebox.showinfo("School Update", "School updated")
                 schoolList.item(selectedSchool,values=(updateField[0].get(),updateField[1].get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
                 updateSchoolTop.destroy()
             else:
                 print(status)
-                #messagebox.showinfo("School Update", status)
+                messagebox.showinfo("School Update", status)
             
         schoolNameLabel = tk.Label(updateSchoolTop,text='School Name: ')
         schoolNameLabel.grid(row=0,column=0,padx=5,pady=5)
@@ -294,12 +294,12 @@ def showPage(tab2,employeeId):
             status = Service.addExperience(newExperience)
             if(status == True):
                 print("Experience added")
-                #messagebox.showinfo("Experience Add", "Experience added")
+                messagebox.showinfo("Experience Add", "Experience added")
                 experienceList.insert('', 'end',values=(newExperience.companyName,newExperience.positionName,newExperience.startDate,newExperience.endDate))
                 addExperienceTop.destroy()
             else:
                 print(status)
-                #messagebox.showinfo("Experience Add", status)
+                messagebox.showinfo("Experience Add", status)
             
         submitButton = tk.Button(addExperienceTop,text='Submit',command=submitExperience)
         submitButton.grid(row=4,column=1,padx=5,pady=5)
@@ -311,11 +311,11 @@ def showPage(tab2,employeeId):
         status = Service.deleteExperience(experience)
         if(status == True):
             print("Experience deleted")
-            #messagebox.showinfo("Experience Delete", "Experience deleted")
+            messagebox.showinfo("Experience Delete", "Experience deleted")
             experienceList.delete(selectedExperience)
         else:
             print(status)
-            #messagebox.showinfo("Experience Delete", status)
+            messagebox.showinfo("Experience Delete", status)
             
     def updateExperienceTopLevel():
         selectedExperience = experienceList.selection()[0]
@@ -340,12 +340,12 @@ def showPage(tab2,employeeId):
             status = Service.updateExperience(oldExperience,newExperience)
             if status == True:
                 print("Experience updated")
-                #messagebox.showinfo("Experience Update", "Experience updated")
+                messagebox.showinfo("Experience Update", "Experience updated")
                 experienceList.item(selectedExperience,values=(updateField[0].get(),updateField[1].get(),startDateCalendar.selection_get(),endDateCalendar.selection_get()))
                 updateExperienceTop.destroy()
             else:
                 print(status)
-                #messagebox.showinfo("Experience Update", status)
+                messagebox.showinfo("Experience Update", status)
             
         companyNameLabel = tk.Label(updateExperienceTop,text='Company Name: ')
         companyNameLabel.grid(row=0,column=0,padx=5,pady=5)
@@ -405,7 +405,7 @@ def showPage(tab2,employeeId):
             applicationListView.insert('', 'end', text="1", values=(app.applicationId , app.applicationName,app.companyName,app.applicationDate, app.counter, app.contractType,app.positionName,app.description,app.appliedApplicationDate,app.status))
     else:   
         print(status)
-        #messagebox.showinfo("Applications", status)
+        messagebox.showinfo("Applications", status)
         
     applicationListView.grid(row=12,padx=5,pady=5,columnspan=3)
     

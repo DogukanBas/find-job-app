@@ -3,6 +3,7 @@ from tkinter import ttk
 from Backend import sql_servis as Service
 from Backend import Entities
 from GUI import employeeProfilePage
+from tkinter import messagebox
 
 def showPage(tab1,employeeId):
     
@@ -40,7 +41,7 @@ def showPage(tab1,employeeId):
                 applicationListView.insert('', 'end', text="1", values=(app[1].applicationId , app[1].applicationName,app[0],app[1].applicationDate, app[1].counter, app[1].contractType,app[1].positionName,app[1].description))
         else:
             print("Applications not filtered")
-            #messagebox.showerror("Filter", f"Applications not filtered - {status}")
+            messagebox.showerror("Filter", f"Applications not filtered - {status}")
     
     filterButton = tk.Button(tab1,text='Filter',command=filter)
     filterButton.grid(row=2,column=2,padx=5,pady=5)
@@ -90,10 +91,10 @@ def showPage(tab1,employeeId):
                     employeeProfilePage.reloadApplicationsListView(employeeId)
                     applicationListView.delete(applicationListView.selection()[0])
                     coverLetterTopLevel.destroy()
-                    #messagebox.showinfo("Apply", "Application successful")
+                    messagebox.showinfo("Apply", "Application successful")
                 else:
                     print("Application failed")
-                    #messagebox.showerror("Apply", f"Application failed - {status}")
+                    messagebox.showerror("Apply", f"Application failed - {status}")
                     
         sendButton = tk.Button(coverLetterTopLevel,text="Send",command=send)
         sendButton.grid(row=2,column=0,padx=5,pady=5)

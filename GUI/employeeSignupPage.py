@@ -48,8 +48,6 @@ def showPage() :
             employeeSignupForm.destroy()
         else:
             print("Employee registration failed")
-            #employeeSignupForm.destroy()
-            #employeeUsernameEntry.configure(highlightbackground='red')
             messagebox.showerror("Employee Signup", f"Employee registration failed - {status}")
     
     submitButton = tk.Button(employeeSignupForm, text="Submit", command=submit)
