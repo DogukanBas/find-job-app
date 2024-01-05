@@ -528,7 +528,7 @@ def showAllApplications(employeeId):
         applications = cur.fetchall()
         applicationList = []
         # query for count of applicants
-        query="SELECT COUNT(*) FROM appliedapplications"
+        query="SELECT COUNT(*) FROM applications"
         cur.execute(query)
         count = cur.fetchone()[0]
         for app in applications:
@@ -544,7 +544,7 @@ def showAllApplications(employeeId):
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
         conn.rollback()
-        return error
+        return error,0
 
 
 def filterApplications(employeeId,filter):
