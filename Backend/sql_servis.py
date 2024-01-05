@@ -528,7 +528,7 @@ def showAllApplications(employeeId):
         applications = cur.fetchall()
         applicationList = []
         # query for count of applicants
-        query="SELECT COUNT(*) FROM applications"
+        query="SELECT COUNT(*) FROM applications WHERE isActive = true"
         cur.execute(query)
         count = cur.fetchone()[0]
         for app in applications:
