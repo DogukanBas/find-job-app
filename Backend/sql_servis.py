@@ -520,7 +520,7 @@ def showAllApplications(employeeId):
         applications = cur.fetchall()
         applicationList = []
         # query for count of applicants
-        query="SELECT COUNT(*) FROM applications WHERE isActive = true"
+        query="SELECT COUNT(*) FROM applications WHERE isActive = true and applicationId not in (Select applicationId from appliedapplications where employeeId = " + str(employeeId) + ")"
         cur.execute(query)
         count = cur.fetchone()[0]
         for app in applications:
